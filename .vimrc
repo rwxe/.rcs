@@ -1,3 +1,11 @@
+"自动安装vim-plug
+"如果有代理，则可能需要设置$GIT_SSL_NO_VERIFY=true
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl --insecure -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
 set nu
 syntax enable
 set ruler
@@ -33,7 +41,12 @@ set statusline+=\ %l			 "光标所在行
 set statusline+=\,%v			 "光标所在列
 set statusline+=\ %r%w\%p%%    "只读标记，preview标记，当前百分比标记
 set background=dark
+set backspace=indent,eol,start
+set complete-=i "无插件情况下，i选项会递归扫描文件查找符号，非常耗时
+set scrolloff=10 "上下边界偏移10行
+set cursorline "高亮当前行
 set showcmd
+let mapleader=";"
 if &filetype != 'c'
 	set nrformats-=octal
 endif
@@ -42,15 +55,18 @@ endif
 set list
 set listchars=space:·,tab::::
 "色彩主题
-colorscheme molokai
 "colorscheme solarized
 "let g:molokai_original = 1
+colorscheme molokai
 "启用真色彩
+
 if exists('+termguicolors')
   let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
   let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
   set termguicolors
 endif
+
+
 "自定义附加颜色设置
 "自定义颜色组1 御召御納戸 
 hi User1 ctermfg=15  ctermbg=23 cterm=bold guibg=#2e5c6e
@@ -59,21 +75,32 @@ hi statuslineNC term=None cterm=None ctermfg=White ctermbg=Black
 "hi Normal ctermbg=None guibg=NONE
 hi TabLineSel ctermfg=15  ctermbg=23 cterm=bold
 "hi Comment guifg=#91989f
-"hi Visual ctermfg=235 ctermbg=15
+hi Visual guifg=#403D3D guibg=White
 "hi String ctermfg=227
 hi Todo ctermfg=Black ctermbg=Yellow guifg=Black guibg=Yellow
 
 hi SpecialKey guifg=#303030
 set nocompatible			  " 去除VI一致性,必须要添加
-"vim-plug
+
+
+"vim-plug 列表
 filetype off				  " 为了vim-plug，如果不使用vim-plug就要去掉
 call plug#begin('~/.vim/plugged')
-Plug 'ycm-core/YouCompleteMe'
+"Plug 'ycm-core/YouCompleteMe' "YCM补全
 Plug 'guns/xterm-color-table.vim',{'on':'XtermColorTable'}
 Plug 'tell-k/vim-autopep8',{'for':'python'}
 Plug 'preservim/nerdtree'
+Plug 'tomasr/molokai',{'do':'mkdir -p ../../colors;mv colors/molokai.vim ../../colors/'}
+Plug 'neoclide/coc.nvim', {'branch': 'release'} "coc.nvim补全
 call plug#end()
-"PLUGIN SETTING
+"以下是插件设置
+
+"for coc.nvim
+"按下tab后可补全第一项并关闭弹出菜单
+inoremap <expr> <Tab> pumvisible() ? coc#_select_confirm() : "<Tab>"
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
 let g:ycm_key_invoke_completion = '<C-N><C-P>' "手动触发补全
 let g:ycm_auto_trigger = 1 "自动触发补全候选词
 let g:ycm_auto_hover = 'CursorHold' "自动悬停文档
@@ -264,11 +291,15 @@ func! FoldMethod()
 endfunc
 
 
+
+
+"启动时会运行的函数
 func! CallAtStarted()
 	call BracesMatch()
 	call FoldMethod()
 endfunc
 
+"新建文件时会运行的函数
 func! CallAtNew()
 	call AutoTitle()
 endfunc
