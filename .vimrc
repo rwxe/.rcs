@@ -5,30 +5,29 @@ if empty(glob(data_dir . '/autoload/plug.vim'))
   silent execute '!curl --insecure -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
-
-set nu
-syntax enable
-set ruler
-set clipboard=unnamed
-set noeb
-set confirm
-set autoindent
+set nu "行号
+syntax enable "语法高亮
+set ruler "尺子，显示行列号
+set noeb "不要响铃
+set clipboard=unnamed "剪贴板指向*寄存器
+set autoindent "自动缩进
 filetype plugin indent on
-set smartindent
-set history=1500
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
-set hlsearch
-set incsearch
+set smartindent "智能缩进
+set history=1500 "历史1500行
+set tabstop=4 "tab 4格
+set softtabstop=4 "tab 4格
+set shiftwidth=4 
+set hlsearch "高亮搜索
+set incsearch "高亮当前搜索
 set encoding=utf-8
 set termencoding=utf-8
 set fileencodings=ucs-bom,utf-8,cp936
 set completeopt=menu,menuone,popup
-set mouse=a
-set nowrap
-set t_Co=256
-set laststatus=2
+set mouse=a "支持鼠标
+set nowrap "不折叠行
+set t_Co=256 "启用256色
+set laststatus=2 "2为一直启用状态栏
+set wildmenu "底线命令模式补全栏
 set statusline+=%1*%t%*  "文件名
 set statusline+=\ %<%F "文件绝对路径
 set statusline+=\ %{''.(&fenc==&enc?&enc:('['.&fenc.','.&enc.']'))} "fenc和enc相同就显示enc,不同就显示[fenc,enc]
@@ -45,9 +44,9 @@ set backspace=indent,eol,start
 set complete-=i "无插件情况下，i选项会递归扫描文件查找符号，非常耗时
 set scrolloff=10 "上下边界偏移10行
 set cursorline "高亮当前行
-set showcmd
-let mapleader=";"
-if &filetype != 'c'
+set showcmd "显示命令
+let mapleader=";" "leader键
+if &filetype != 'c' "防止将0开头的数字识别为八进制
 	set nrformats-=octal
 endif
 
@@ -87,6 +86,7 @@ set nocompatible			  " 去除VI一致性,必须要添加
 filetype off				  " 为了vim-plug，如果不使用vim-plug就要去掉
 call plug#begin('~/.vim/plugged')
 "Plug 'ycm-core/YouCompleteMe' "YCM补全
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'guns/xterm-color-table.vim',{'on':'XtermColorTable'}
 Plug 'tell-k/vim-autopep8',{'for':'python'}
 Plug 'preservim/nerdtree'
@@ -98,9 +98,10 @@ call plug#end()
 "for coc.nvim
 "按下tab后可补全第一项并关闭弹出菜单
 inoremap <expr> <Tab> pumvisible() ? coc#_select_confirm() : "<Tab>"
+"格式化所选文本
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
-
+let g:godef_split=1
 let g:ycm_key_invoke_completion = '<C-N><C-P>' "手动触发补全
 let g:ycm_auto_trigger = 1 "自动触发补全候选词
 let g:ycm_auto_hover = 'CursorHold' "自动悬停文档
@@ -133,7 +134,10 @@ let g:ycm_filetype_whitelist = {
 			\ "sh":1,
 			\ "zsh":1,
 			\ }
-nnoremap K :YcmCompleter GoTo<CR>
+
+"nnoremap K :YcmCompleter GoTo<CR>
+let g:godef_split=3 """打开新窗口的时候左右split
+let g:godef_same_file_in_same_window=1 """函数在同一个文件中时不需要打开新窗口
 nnoremap <C-e> :NERDTreeToggle<CR>
 
 
@@ -196,6 +200,7 @@ func! RunDebugger()
 endfunc
 	
 func! BracesMatch()
+	"手写的括号匹配
 	inoremap (	()<left>
 	inoremap [	[]<left>
 	inoremap {	{}<left>
@@ -243,6 +248,7 @@ func! BracesMatch()
 endfunc
 
 func! AutoTitle()
+	"自动标题
 	if &filetype=='sh'
 		call setline(1,'#!/usr/bin/env bash')
 		call feedkeys('o','t')
@@ -303,14 +309,23 @@ endfunc
 func! CallAtNew()
 	call AutoTitle()
 endfunc
+"新进入缓冲区会运行的函数
+func! CallAtBufEnter()
+	call BracesMatch()
+	"对于gd跳转，分裂新窗口
+	nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
+endfunc
 
 autocmd Filetype * call CallAtStarted()
 autocmd BufNewFile * call CallAtNew()
+autocmd BufEnter * call CallAtBufEnter()
 autocmd TabEnter * call BracesMatch()
-autocmd BufEnter * call BracesMatch()
 autocmd WinEnter * call BracesMatch()
 
 nnoremap <c-h> <c-w>h
 nnoremap <c-j> <c-w>j
 nnoremap <c-k> <c-w>k
 nnoremap <c-l> <c-w>l
+
+nnoremap <leader>p "0p
+vnoremap <leader>p "0p
