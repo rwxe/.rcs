@@ -1,0 +1,22 @@
+{
+	"coc.preferences.jumpCommand": "vsplit",
+	"coc.preferences.rootPatterns": [
+		".git",
+		".hg",
+		".projections.json"
+	],
+	"sql.database": "mysql",
+	"sql.formatOptions": {
+		"language":"mysql",
+		"indent":"    ",
+		"linesBetweenQueries":2,
+		"uppercase":true
+	},
+  "languageserver": {
+    "golang": {
+      "command": "gopls",
+      "rootPatterns": ["go.mod", ".git/"],
+      "filetypes": ["go"]
+    }
+  }
+}
