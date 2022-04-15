@@ -44,6 +44,7 @@ set backspace=indent,eol,start
 set complete-=i "无插件情况下，i选项会递归扫描文件查找符号，非常耗时
 set scrolloff=10 "上下边界偏移10行
 set cursorline "高亮当前行
+set cursorcolumn "高亮当前列
 set showcmd "显示命令
 let mapleader=";" "leader键
 if &filetype != 'c' "防止将0开头的数字识别为八进制
@@ -86,6 +87,7 @@ set nocompatible			  " 去除VI一致性,必须要添加
 filetype off				  " 为了vim-plug，如果不使用vim-plug就要去掉
 call plug#begin('~/.vim/plugged')
 "Plug 'ycm-core/YouCompleteMe' "YCM补全
+Plug 'preservim/tagbar'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'guns/xterm-color-table.vim',{'on':'XtermColorTable'}
 Plug 'tell-k/vim-autopep8',{'for':'python'}
@@ -101,7 +103,9 @@ inoremap <expr> <Tab> pumvisible() ? coc#_select_confirm() : "<Tab>"
 "格式化所选文本
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
-let g:godef_split=1
+"重命名
+nmap <leader>rn <Plug>(coc-rename)
+let g:tagbar_ctags_bin='/usr/bin/ctags' "tagbar需要需要知道ctags路径
 let g:ycm_key_invoke_completion = '<C-N><C-P>' "手动触发补全
 let g:ycm_auto_trigger = 1 "自动触发补全候选词
 let g:ycm_auto_hover = 'CursorHold' "自动悬停文档
@@ -139,10 +143,14 @@ let g:ycm_filetype_whitelist = {
 let g:godef_split=3 """打开新窗口的时候左右split
 let g:godef_same_file_in_same_window=1 """函数在同一个文件中时不需要打开新窗口
 nnoremap <C-e> :NERDTreeToggle<CR>
+nnoremap <F8> :TagbarToggle<CR>
+let g:go_def_mapping_enabled=0 "禁用vim-go的gd映射，改用自定义映射
+"let g:go_fmt_autosave=0 "禁用vim-go自动格式化
+nnoremap  gd :call CocAction('jumpDefinition', 'drop')<CR>
 
 
-command Clear call Clear()
-command UnClear call UnClear()
+command BlackBGToggle call BlackBGToggle()
+command WrapToggle call WrapToggle()
 command W w
 command WQ wq
 command Wq wq
@@ -151,15 +159,39 @@ command WA wa
 command Q q
 command Qa qa
 command QA qa
-func! Clear()
-	exec 'hi Normal ctermbg=Black guibg=Black'
+func BlackBGToggle()
+	"背景黑色开关
+	if !exists('g:is_blacked')
+		let g:is_blacked=1
+	endif
+	if g:is_blacked==1
+		exec 'hi Normal ctermbg=None guibg=NONE'
+		let g:is_blacked=0
+	else
+		exec 'hi Normal ctermbg=Black guibg=Black'
+		let g:is_blacked=1
+	endif
 endfunc
-func! UnClear()
-	exec 'hi Normal ctermbg=None guibg=NONE'
+func WrapToggle()
+	if !exists('g:is_wrapped')
+		let g:is_wrapped=0
+	endif
+	if g:is_wrapped==0
+		nmap j gj
+		nmap k gk
+		set wrap
+		let g:is_wrapped=1
+	else
+		"使用unmap系列命令，后面不要有空格
+		nunmap j
+		nunmap k
+		set nowrap
+		let g:is_wrapped=0
+	endif
 endfunc
 
 map <F5> :call CompileTheFile()<CR>
-func! CompileTheFile()
+func CompileTheFile()
 	exec "wa"
 	if &filetype == 'c'
 		exec "!g++ % -o %< &&  ./%<"
@@ -182,7 +214,7 @@ func! CompileTheFile()
 	endif
 endfunc
 map <F6> :call RunDebugger()<CR>
-func! RunDebugger()
+func RunDebugger()
 	exec "wa"
 	if &filetype == 'c'
 		exec "!g++ -g % -o %< && gdb %<"
@@ -199,7 +231,7 @@ func! RunDebugger()
 	endif
 endfunc
 	
-func! BracesMatch()
+func BracesMatch()
 	"手写的括号匹配
 	inoremap (	()<left>
 	inoremap [	[]<left>
@@ -247,7 +279,7 @@ func! BracesMatch()
 	endif
 endfunc
 
-func! AutoTitle()
+func AutoTitle()
 	"自动标题
 	if &filetype=='sh'
 		call setline(1,'#!/usr/bin/env bash')
@@ -289,7 +321,7 @@ func! AutoTitle()
 	endif
 endfunc
 
-func! FoldMethod()
+func FoldMethod()
 	if &filetype=='python'
 		set foldmethod=indent
 		set foldlevel=20
@@ -300,27 +332,37 @@ endfunc
 
 
 "启动时会运行的函数
-func! CallAtStarted()
-	call BracesMatch()
-	call FoldMethod()
+func CallAtStarted()
 endfunc
 
 "新建文件时会运行的函数
-func! CallAtNew()
+func CallAtNew()
 	call AutoTitle()
-endfunc
-"新进入缓冲区会运行的函数
-func! CallAtBufEnter()
 	call BracesMatch()
 	"对于gd跳转，分裂新窗口
-	nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
+"	nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
+endfunc
+func CallAtBufEnter()
+	call BracesMatch()
+	"对于gd跳转，分裂新窗口
+"nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
+endfunc
+func CallAtTabEnter()
+	call BracesMatch()
+	"对于gd跳转，分裂新窗口
+"nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
+endfunc
+func CallAtWinEnter()
+	call BracesMatch()
+	"对于gd跳转，分裂新窗口
+"nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
 endfunc
 
 autocmd Filetype * call CallAtStarted()
 autocmd BufNewFile * call CallAtNew()
 autocmd BufEnter * call CallAtBufEnter()
-autocmd TabEnter * call BracesMatch()
-autocmd WinEnter * call BracesMatch()
+autocmd TabEnter * call CallAtTabEnter()
+autocmd WinEnter * call CallAtWinEnter()
 
 nnoremap <c-h> <c-w>h
 nnoremap <c-j> <c-w>j
