@@ -1,10 +1,17 @@
 {
-	"coc.preferences.jumpCommand": "vsplit",
+	"coc.preferences.jumpCommand":"drop",
 	"coc.preferences.rootPatterns": [
 		".git",
-		".hg",
+		".env",
+		"env",
+		".venv",
+		"venv",
+		"setup.cfg",
+		"pyvenv.cfg",
+		"setup.py",
 		".projections.json"
 	],
+    "python.pythonPath": "python",
 	"sql.database": "mysql",
 	"sql.formatOptions": {
 		"language":"mysql",
