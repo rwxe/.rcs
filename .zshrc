@@ -85,6 +85,9 @@ bindkey '\ek' end-of-line
 bindkey -s '\eb' '^Ucd ..\n'
 bindkey -s '\ei' '^Ucd ~\n'
 
+# 模糊搜索历史
+bindkey '^r' history-incremental-pattern-search-backward
+
 #bindkey '\e[1;3D' backward-word
 #bindkey '\e[1;3C' forward-word
 #bindkey '\e[1;3A' beginning-of-line
@@ -97,7 +100,7 @@ alias mv="mv -i"
 alias rm="trash-put"
 # User configuration
 # 替换提示符中的>
-#PROMPT=${PROMPT/>/⚡}
+PROMPT=${PROMPT/>/⚡}
 
 #golang env
 export PATH=$PATH:/usr/local/go/bin
