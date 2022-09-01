@@ -1,0 +1,106 @@
+set nu "行号
+syntax enable "语法高亮
+set ruler "尺子，显示行列号
+set noeb "不要响铃
+set autoindent "自动缩进
+filetype plugin indent on
+set smartindent "智能缩进
+set history=1500 "历史1500行
+set tabstop=4 "tab 4格
+set softtabstop=4 "tab 4格
+set shiftwidth=4 
+set hlsearch "高亮搜索
+set incsearch "高亮当前搜索
+set encoding=utf-8
+set termencoding=utf-8
+set fileencodings=ucs-bom,utf-8,cp936
+set completeopt=menu,menuone,popup
+set mouse=a "支持鼠标
+set nowrap "不折叠行
+set t_Co=256 "启用256色
+set laststatus=2 "2为一直启用状态栏
+set wildmenu "底线命令模式补全栏
+set statusline+=%1*%t%*  "文件名
+set statusline+=\ %<%F "文件绝对路径
+set statusline+=\ %{''.(&fenc==&enc?&enc:('['.&fenc.','.&enc.']'))} "fenc和enc相同就显示enc,不同就显示[fenc,enc]
+set statusline+=\ %{(&bomb?'BOM':\"\")}			   "有无BOM
+set statusline+=\ %{&ff}							  "文件系统(dos/unix..)
+set statusline+=\ %{&ft}							  "文件类型
+set statusline+=%=			   "开始右对齐
+set statusline+=%m[%B]			 "修改标记,光标处字符unicode 
+set statusline+=\ %l			 "光标所在行
+set statusline+=\,%v			 "光标所在列
+set statusline+=\ %r%w\%p%%    "只读标记，preview标记，当前百分比标记
+set background=dark
+set backspace=indent,eol,start
+set complete-=i "无插件情况下，i选项会递归扫描文件查找符号，非常耗时
+set scrolloff=10 "上下边界偏移10行
+set cursorline "高亮当前行
+set cursorcolumn "高亮当前列
+set showcmd "显示命令
+let mapleader=";" "leader键
+if &filetype != 'c' "防止将0开头的数字识别为八进制
+	set nrformats-=octal
+endif
+
+set fencs=utf-8,gbk,utf-16,utf-32,ucs-bom "for Windows git bash
+
+"显示空格
+set list
+set listchars=space:·,tab::::
+"色彩主题
+"colorscheme solarized
+"let g:molokai_original = 1
+colorscheme molokai
+"启用真色彩
+
+if exists('+termguicolors')
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
+
+
+"自定义附加颜色设置
+"自定义颜色组1 御召御納戸 
+hi User1 ctermfg=15  ctermbg=23 cterm=bold guibg=#2e5c6e
+hi statusline term=bold,underline cterm=underline gui=underline ctermfg=Black ctermbg=White guibg=#f4a7b9 guifg=#08192d
+hi statuslineNC term=None cterm=None ctermfg=White ctermbg=Black
+"hi Normal ctermbg=None guibg=NONE
+hi TabLineSel ctermfg=15  ctermbg=23 cterm=bold
+"hi Comment guifg=#91989f
+hi Visual guifg=#403D3D guibg=White
+"hi String ctermfg=227
+hi Todo ctermfg=Black ctermbg=Yellow guifg=Black guibg=Yellow
+
+hi SpecialKey guifg=#303030
+set nocompatible			  " 去除VI一致性,必须要添加
+
+" For IDEA Begin
+" IDEA Annotate with git blame
+command BL action Annotate
+" IDEA Goto Implementation
+nmap gD :action GotoImplementation<CR>
+" IDEA Goto Interfaces
+nmap gI :action GotoSuperMethod<CR>
+command WT action EditorToggleUseSoftWraps
+" For IDEA End
+
+
+" not work for vscode vim
+command W w
+command WQ wq
+command Wq wq
+command Wa wa
+command WA wa
+command Q q
+command Qa qa
+command QA qa
+
+nnoremap <c-h> <c-w>h
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-l> <c-w>l
+
+nnoremap <leader>p "0p
+vnoremap <leader>p "0p
