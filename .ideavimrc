@@ -84,6 +84,7 @@ nmap gD :action GotoImplementation<CR>
 " IDEA Goto Interfaces
 nmap gI :action GotoSuperMethod<CR>
 command WT action EditorToggleUseSoftWraps
+xmap <leader>f  :action ReformatCode<CR>
 " For IDEA End
 
 
@@ -101,6 +102,9 @@ nnoremap <c-h> <c-w>h
 nnoremap <c-j> <c-w>j
 nnoremap <c-k> <c-w>k
 nnoremap <c-l> <c-w>l
+
+nnoremap H gT
+nnoremap L gt
 
 nnoremap <leader>p "0p
 vnoremap <leader>p "0p
