@@ -1,15 +1,7 @@
-"自动安装vim-plug
-"如果有代理，则可能需要设置$GIT_SSL_NO_VERIFY=true
-let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
-if empty(glob(data_dir . '/autoload/plug.vim'))
-  silent execute '!curl --insecure -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
 set nu "行号
 syntax enable "语法高亮
 set ruler "尺子，显示行列号
 set noeb "不要响铃
-set clipboard=unnamed "剪贴板指向*寄存器
 set autoindent "自动缩进
 filetype plugin indent on
 set smartindent "智能缩进
@@ -51,6 +43,8 @@ if &filetype != 'c' "防止将0开头的数字识别为八进制
 	set nrformats-=octal
 endif
 
+set fencs=utf-8,gbk,utf-16,utf-32,ucs-bom "for Windows git bash
+
 "显示空格
 set list
 set listchars=space:·,tab::::
@@ -82,91 +76,19 @@ hi Todo ctermfg=Black ctermbg=Yellow guifg=Black guibg=Yellow
 hi SpecialKey guifg=#303030
 set nocompatible			  " 去除VI一致性,必须要添加
 
-
-"vim-plug 列表
-filetype off				  " 为了vim-plug，如果不使用vim-plug就要去掉
-call plug#begin('~/.vim/plugged')
-"Plug 'ycm-core/YouCompleteMe' "YCM补全
-Plug 'preservim/tagbar'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-Plug 'guns/xterm-color-table.vim',{'on':'XtermColorTable'}
-Plug 'tell-k/vim-autopep8',{'for':'python'}
-Plug 'preservim/nerdtree'
-Plug 'tomasr/molokai',{'do':'mkdir -p ../../colors;mv colors/molokai.vim ../../colors/'}
-Plug 'neoclide/coc.nvim', {'branch': 'release'} "coc.nvim补全
-call plug#end()
-"以下是插件设置
-
-"for coc.nvim
-"inoremap <expr> <Tab> pumvisible() ? coc#_select_confirm() : "<Tab>"
-"格式化所选文本
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
-"重命名
-nmap <leader>rn <Plug>(coc-rename)
-" use <tab> for trigger completion and navigate to the next complete item
-function! CheckBackspace() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-" for WSL clipboard
-if system('uname -r') =~ "Microsoft"
-    augroup Yank
-        autocmd!
-        autocmd TextYankPost * :call system('/mnt/c/windows/system32/clip.exe ',@")
-        augroup END
-endif
-
-inoremap <silent><expr> <Tab>
-      \ coc#pum#visible() ? coc#pum#next(1) :
-      \ CheckBackspace() ? "\<Tab>" :
-      \ coc#refresh()
-let g:tagbar_ctags_bin='/usr/bin/ctags' "tagbar需要需要知道ctags路径
-let g:ycm_key_invoke_completion = '<C-N><C-P>' "手动触发补全
-let g:ycm_auto_trigger = 1 "自动触发补全候选词
-let g:ycm_auto_hover = 'CursorHold' "自动悬停文档
-let g:ycm_goto_buffer_command = 'split-or-existing-window'
-let g:ycm_open_loclist_on_ycm_diags = 1
-"let g:ycm_open_loclist_on_ycm_diags = 1
-"let g:ycm_always_populate_location_list = 0
-"let g:ycm_complete_in_strings = 1
-"let g:ycm_complete_in_comments = 1
-"let g:ycm_collect_identifiers_from_comments_and_strings = 1
-"强制左侧的诊断标签栏开启
-"set signcolumn=yes
-"let g:ycm_show_diagnostics_ui=0
-"let g:ycm_add_preview_to_completeopt = 0
-"let g:ycm_key_list_stop_completion = ['<C-y>']
-let g:ycm_filetype_whitelist = {
-			\ "vim":1,
-			\ "c":1,
-			\ "cpp":1,
-			\ "cs":1,
-			\ "python":1,
-			\ "html":1,
-			\ "htmldjango":1,
-			\ "php":1,
-			\ "go":1,
-			\ "rust":1,
-			\ "java":1,
-			\ "JavaScript":1,
-			\ "TypeScript":1,
-			\ "sh":1,
-			\ "zsh":1,
-			\ }
-
-"nnoremap K :YcmCompleter GoTo<CR>
-let g:godef_split=3 """打开新窗口的时候左右split
-let g:godef_same_file_in_same_window=1 """函数在同一个文件中时不需要打开新窗口
-nnoremap <C-e> :NERDTreeToggle<CR>
-nnoremap <F8> :TagbarToggle<CR>
-let g:go_def_mapping_enabled=0 "禁用vim-go的gd映射，改用自定义映射
-"let g:go_fmt_autosave=0 "禁用vim-go自动格式化
-nnoremap  gd :call CocAction('jumpDefinition', 'drop')<CR>
+" For IDEA Begin
+" IDEA Annotate with git blame
+command BL action Annotate
+" IDEA Goto Implementation
+nmap gD :action GotoImplementation<CR>
+" IDEA Goto Interfaces
+nmap gI :action GotoSuperMethod<CR>
+command WT action EditorToggleUseSoftWraps
+xmap <leader>f  :action ReformatCode<CR>
+" For IDEA End
 
 
-command BlackBGToggle call BlackBGToggle()
-command WrapToggle call WrapToggle()
+" not work for vscode vim
 command W w
 command WQ wq
 command Wq wq
@@ -175,210 +97,6 @@ command WA wa
 command Q q
 command Qa qa
 command QA qa
-func BlackBGToggle()
-	"背景黑色开关
-	if !exists('g:is_blacked')
-		let g:is_blacked=1
-	endif
-	if g:is_blacked==1
-		exec 'hi Normal ctermbg=None guibg=NONE'
-		let g:is_blacked=0
-	else
-		exec 'hi Normal ctermbg=Black guibg=Black'
-		let g:is_blacked=1
-	endif
-endfunc
-func WrapToggle()
-	if !exists('g:is_wrapped')
-		let g:is_wrapped=0
-	endif
-	if g:is_wrapped==0
-		nmap j gj
-		nmap k gk
-		set wrap
-		let g:is_wrapped=1
-	else
-		"使用unmap系列命令，后面不要有空格
-		nunmap j
-		nunmap k
-		set nowrap
-		let g:is_wrapped=0
-	endif
-endfunc
-
-map <F5> :call CompileTheFile()<CR>
-func CompileTheFile()
-	exec "wa"
-	if &filetype == 'c'
-		exec "!g++ % -o %< &&  ./%<"
-	elseif &filetype == 'cpp'
-		exec "!g++ % -o %< &&  ./%<"
-	elseif &filetype == 'java'
-		exec "!javac -encoding utf-8 -d . % &&	java %<"
-	elseif &filetype == 'sh'
-		exec "!./%"
-	elseif &filetype == 'python'
-		exec "! python %"
-	elseif &filetype == 'html'
-		exec "!firefox % &"
-	elseif &filetype == 'go'
-		exec "!go run %"
-	elseif &filetype == 'mkd'
-		exec "!~/.vim/markdown.pl % > %.html & && firefox %.html &"
-	elseif &filetype == 'markdown'
-		exec '!firefox %'
-	endif
-endfunc
-map <F6> :call RunDebugger()<CR>
-func RunDebugger()
-	exec "wa"
-	if &filetype == 'c'
-		exec "!g++ -g % -o %< && gdb %<"
-	elseif &filetype == 'cpp'
-	elseif &filetype == 'java'
-	elseif &filetype == 'sh'
-	elseif &filetype == 'python'
-		exec '!python -m ipdb %'
-	elseif &filetype == 'html'
-	elseif &filetype == 'go'
-		exec '!dlv debug %'
-	elseif &filetype == 'mkd'
-	elseif &filetype == 'markdown'
-	endif
-endfunc
-	
-func BracesMatch()
-	"手写的括号匹配
-	inoremap (	()<left>
-	inoremap [	[]<left>
-	inoremap {	{}<left>
-	inoremap '	''<left>
-	inoremap " ""<left>
-	inoremap ` ``<left>
-	
-	inoremap () ()
-	inoremap [] []
-	inoremap {} {}
-	inoremap '' ''
-	inoremap "" ""
-	inoremap `` ``
-
-	inoremap (<BACKSPACE> (
-	inoremap [<BACKSPACE> [
-	inoremap {<BACKSPACE> {
-	inoremap '<BACKSPACE> '
-	inoremap "<BACKSPACE> "
-	if &filetype=='vim'
-		inoremap " "
-	elseif &filetype=='cpp'||&filetype=='c'||&filetype=='java' ||&filetype=='css'
-		inoremap {<CR> {<CR>}<up><end><CR>
-	elseif &filetype=='go'
-		inoremap (<CR> (<CR>)<up><end><CR>
-		inoremap {<CR> {<CR>}<up><end><CR>
-	elseif &filetype=='markdown'
-		inoremap ``` ``````<left><left><left><CR><up><END>
-	elseif &filetype=='python'
-		set expandtab
-		inoremap """ """"""<left><left><left>
-		inoremap ''' ''''''<left><left><left>
-		inoremap < <
-		inoremap <<BACKSPACE> <<BACKSPACE>
-	elseif &filetype=='php' || &filetype=='html' || &filetype=='htmldjango'
-		inoremap < <><left>
-		inoremap <<BACKSPACE> <
-		inoremap {<CR> {<CR>}<up><end><CR>
-		"For Django
-		inoremap {% {%	 %}<left><left><left><left>
-		inoremap {%<BACKSPACE> {%
-		inoremap {# {#	 #}<left><left><left><left>
-		inoremap {#<BACKSPACE> {#
-	endif
-endfunc
-
-func AutoTitle()
-	"自动标题
-	if &filetype=='sh'
-		call setline(1,'#!/usr/bin/env bash')
-		call feedkeys('o','t')
-	elseif &filetype=='python'
-		call setline(1,'# -*-coding:utf-8-*-')
-		call feedkeys('o','t')
-	elseif &filetype=='c'
-		call setline(1,'#include<stdio.h>')
-		call setline(2,'int main()')
-		call setline(3,'{')
-		call setline(4,'	return 0;')
-		call setline(5,'}')
-		call feedkeys('3Go','t')
-	elseif &filetype=='cpp'
-		call setline(1,'#include<iostream>')
-		call setline(2,'using namespace std;')
-		call setline(3,'int main()')
-		call setline(4,'{')
-		call setline(5,'	return 0;')
-		call setline(6,'}')
-		call feedkeys('4Go','t')
-	elseif &filetype=='java'
-		call setline(1,'public class '.expand('%:t:r'))
-		call setline(2,'{')
-		call setline(3,'}')
-		call feedkeys('2Go','t')
-	elseif &filetype=='html' || &filetype=='php'
-		call setline(1,'<!DOCTYPE html>')
-		call setline(2,'<html>')
-		call setline(3,'<head>')
-		call setline(4,'<meta charset="utf-8">')
-		call setline(5,'	<title></title>')
-		call setline(6,'</head>')
-		call setline(7,'<body>')
-		call setline(8,'	')
-		call setline(9,'</body>')
-		call setline(10,'</html>')
-	endif
-endfunc
-
-func FoldMethod()
-	if &filetype=='python'
-		set foldmethod=indent
-		set foldlevel=20
-	endif
-endfunc
-
-
-
-
-"启动时会运行的函数
-func CallAtStarted()
-endfunc
-
-"新建文件时会运行的函数
-func CallAtNew()
-	call AutoTitle()
-	call BracesMatch()
-	"对于gd跳转，分裂新窗口
-"	nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
-endfunc
-func CallAtBufEnter()
-	call BracesMatch()
-	"对于gd跳转，分裂新窗口
-"nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
-endfunc
-func CallAtTabEnter()
-	call BracesMatch()
-	"对于gd跳转，分裂新窗口
-"nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
-endfunc
-func CallAtWinEnter()
-	call BracesMatch()
-	"对于gd跳转，分裂新窗口
-"nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
-endfunc
-
-autocmd Filetype * call CallAtStarted()
-autocmd BufNewFile * call CallAtNew()
-autocmd BufEnter * call CallAtBufEnter()
-autocmd TabEnter * call CallAtTabEnter()
-autocmd WinEnter * call CallAtWinEnter()
 
 nnoremap <c-h> <c-w>h
 nnoremap <c-j> <c-w>j
