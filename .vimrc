@@ -98,7 +98,6 @@ call plug#end()
 "以下是插件设置
 
 "for coc.nvim
-"按下tab后可补全第一项并关闭弹出菜单
 "inoremap <expr> <Tab> pumvisible() ? coc#_select_confirm() : "<Tab>"
 "格式化所选文本
 xmap <leader>f  <Plug>(coc-format-selected)
@@ -385,6 +384,9 @@ nnoremap <c-h> <c-w>h
 nnoremap <c-j> <c-w>j
 nnoremap <c-k> <c-w>k
 nnoremap <c-l> <c-w>l
+
+nnoremap H gT
+nnoremap L gt
 
 nnoremap <leader>p "0p
 vnoremap <leader>p "0p
