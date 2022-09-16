@@ -393,7 +393,9 @@ nnoremap L gt
 nnoremap <leader>rp "0p
 vnoremap <leader>rp "0p
 "快捷复制粘贴剪贴板
+"For GUI terminal，不完全兼容WSL设置
 nnoremap <leader>y "+y
 vnoremap <leader>y "+y
 nnoremap <leader>p "+p
 vnoremap <leader>p "+p
+
