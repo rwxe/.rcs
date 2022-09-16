@@ -106,5 +106,9 @@ nnoremap <c-l> <c-w>l
 nnoremap H gT
 nnoremap L gt
 
-nnoremap <leader>p "0p
-vnoremap <leader>p "0p
+"repeat paste 重复粘贴
+nnoremap <leader>rp "0p
+vnoremap <leader>rp "0p
+"快捷复制粘贴剪贴板
+nnoremap <leader>Y "+y
+vnoremap <leader>P "+p
