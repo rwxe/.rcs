@@ -393,5 +393,7 @@ nnoremap L gt
 nnoremap <leader>rp "0p
 vnoremap <leader>rp "0p
 "快捷复制粘贴剪贴板
-nnoremap <leader>Y "+y
-vnoremap <leader>P "+p
+nnoremap <leader>y "+y
+vnoremap <leader>y "+y
+nnoremap <leader>p "+p
+vnoremap <leader>p "+p
