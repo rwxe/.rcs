@@ -100,16 +100,15 @@ call plug#end()
 "for coc.nvim
 "按下tab后可补全第一项并关闭弹出菜单
 "inoremap <expr> <Tab> pumvisible() ? coc#_select_confirm() : "<Tab>"
+"新版本vim
+inoremap <silent><expr> <tab> coc#pum#visible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
 "格式化所选文本
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 "重命名
 nmap <leader>rn <Plug>(coc-rename)
-" use <tab> for trigger completion and navigate to the next complete item
-function! CheckBackspace() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+
+
 " for WSL clipboard
 if system('uname -r') =~ "Microsoft"
     augroup Yank
@@ -117,11 +116,6 @@ if system('uname -r') =~ "Microsoft"
         autocmd TextYankPost * :call system('/mnt/c/windows/system32/clip.exe ',@")
         augroup END
 endif
-
-inoremap <silent><expr> <Tab>
-      \ coc#pum#visible() ? coc#pum#next(1) :
-      \ CheckBackspace() ? "\<Tab>" :
-      \ coc#refresh()
 let g:tagbar_ctags_bin='/usr/bin/ctags' "tagbar需要需要知道ctags路径
 let g:ycm_key_invoke_completion = '<C-N><C-P>' "手动触发补全
 let g:ycm_auto_trigger = 1 "自动触发补全候选词
@@ -398,4 +392,3 @@ nnoremap <leader>y "+y
 vnoremap <leader>y "+y
 nnoremap <leader>p "+p
 vnoremap <leader>p "+p
-
