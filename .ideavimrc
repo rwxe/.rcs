@@ -84,6 +84,7 @@ nmap gD :action GotoImplementation<CR>
 " IDEA Goto Interfaces
 nmap gI :action GotoSuperMethod<CR>
 command WT action EditorToggleUseSoftWraps
+command DF action Compare.LastVersion
 xmap <leader>f  :action ReformatCode<CR>
 " For IDEA End
 
