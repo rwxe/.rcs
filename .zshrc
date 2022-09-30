@@ -100,8 +100,8 @@ alias cp="cp -i"
 alias mv="mv -i"
 alias rm="trash-put"
 
-alias pwsh="powershell.exe"
-alias psii="powershell.exe ii ." # 在当前路径打开文件管理器
+alias pw="powershell.exe "
+alias pwii="powershell.exe ii ." # 在当前路径打开文件管理器
 
 # User configuration
 # 替换提示符中的>
