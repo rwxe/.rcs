@@ -97,7 +97,7 @@ Plug 'neoclide/coc.nvim', {'tag': 'v0.0.80'} "coc.nvim补全
 Plug 'tpope/vim-fugitive'
 call plug#end()
 "以下是插件设置
-command BL Git blame -w --date=short
+command BL Git blame --abbrev=5 -w --date=short --color-by-age
 "for coc.nvim
 "按下tab后可补全第一项并关闭弹出菜单
 let g:coc_disable_startup_warning = 1
