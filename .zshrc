@@ -9,7 +9,6 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-# ZSH_THEME="bureau"
 ZSH_THEME="mortalscumbag"
 
 # Set list of themes to pick from when loading at random
@@ -74,38 +73,35 @@ plugins=(git extract z zsh-autosuggestions zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
-bindkey '\eH' backward-char
-bindkey '\eL' forward-char
-bindkey '\eJ' down-line-or-history
-bindkey '\eK' up-line-or-history
-bindkey '\eh' backward-word
-bindkey '\el' forward-word
-bindkey '\ej' beginning-of-line
-bindkey '\ek' end-of-line
+bindkey '\eH' backward-char	#左移字母
+bindkey '\eL' forward-char	#右移字母
+bindkey '\eJ' down-line-or-history	#下一个历史
+bindkey '\eK' up-line-or-history	#上一个历史
+bindkey '\eh' backward-word		#左移词语
+bindkey '\el' forward-word	#右移词语
+bindkey '\ej' beginning-of-line	#首字母
+bindkey '\ek' end-of-line	#尾字母
 
-bindkey -s '\eb' '^Ucd ..\n'
-bindkey -s '\ei' '^Ucd ~\n'
+bindkey -s '\eb' '^Ucd ..\n'	#返回上一级
+bindkey -s '\ei' '^Ucd ~\n'		#返回主页
 
 # 模糊搜索历史
 bindkey '^r' history-incremental-pattern-search-backward
+setopt extended_glob
 
-#bindkey '\e[1;3D' backward-word
-#bindkey '\e[1;3C' forward-word
-#bindkey '\e[1;3A' beginning-of-line
-#bindkey '\e[1;3B' end-of-line
+#bindkey '\e[1;3D' backward-word	#alt + left
+#bindkey '\e[1;3C' forward-word		#alt + right
+#bindkey '\e[1;3A' beginning-of-line # alt + up
+#bindkey '\e[1;3B' end-of-line		#alt + down
 
 
 alias sl="ls"
 alias cp="cp -i"
 alias mv="mv -i"
 alias rm="trash-put"
-
-alias pw="powershell.exe "
-alias pwii="powershell.exe ii ." # 在当前路径打开文件管理器
-
 # User configuration
 # 替换提示符中的>
-PROMPT=${PROMPT/>/⚡}
+PROMPT=${PROMPT/>/🌀}
 
 #golang env
 export PATH=$PATH:/usr/local/go/bin
