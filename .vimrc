@@ -1,4 +1,4 @@
-"自动安装vim-plug
+ "自动安装vim-plug
 "如果有代理，则可能需要设置$GIT_SSL_NO_VERIFY=true
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
 if empty(glob(data_dir . '/autoload/plug.vim'))
@@ -93,15 +93,17 @@ Plug 'guns/xterm-color-table.vim',{'on':'XtermColorTable'}
 Plug 'tell-k/vim-autopep8',{'for':'python'}
 Plug 'preservim/nerdtree'
 Plug 'tomasr/molokai',{'do':'mkdir -p ../../colors;mv colors/molokai.vim ../../colors/'}
-Plug 'neoclide/coc.nvim', {'branch': 'release'} "coc.nvim补全
+Plug 'neoclide/coc.nvim', {'tag': 'v0.0.80'} "coc.nvim补全
+Plug 'tpope/vim-fugitive'
 call plug#end()
 "以下是插件设置
-
+command BL Git blame -w --date=short
 "for coc.nvim
 "按下tab后可补全第一项并关闭弹出菜单
-"inoremap <expr> <Tab> pumvisible() ? coc#_select_confirm() : "<Tab>"
+let g:coc_disable_startup_warning = 1
+inoremap <expr> <Tab> pumvisible() ? coc#_select_confirm() : "<Tab>"
 "新版本vim
-inoremap <silent><expr> <tab> coc#pum#visible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
+"inoremap <silent><expr> <tab> coc#pum#visible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
 "格式化所选文本
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
@@ -392,3 +394,4 @@ nnoremap <leader>y "+y
 vnoremap <leader>y "+y
 nnoremap <leader>p "+p
 vnoremap <leader>p "+p
+
