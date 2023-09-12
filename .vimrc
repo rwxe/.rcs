@@ -209,8 +209,8 @@ func WrapToggle()
 	endif
 endfunc
 
-map <F5> :call CompileTheFile()<CR>
-func CompileTheFile()
+map <F5> :call CompileAndRun()<CR>
+func CompileAndRun()
 	exec "wa"
 	if &filetype == 'c'
 		exec "!g++ % -o %< &&  ./%<"
@@ -226,6 +226,8 @@ func CompileTheFile()
 		exec "!firefox % &"
 	elseif &filetype == 'go'
 		exec "!go run %"
+	elseif &filetype == 'rust'
+		exec "!rustc % &&  ./%<"
 	elseif &filetype == 'mkd'
 		exec "!~/.vim/markdown.pl % > %.html & && firefox %.html &"
 	elseif &filetype == 'markdown'
