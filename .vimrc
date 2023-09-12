@@ -91,6 +91,7 @@ Plug 'preservim/tagbar'
 Plug 'guns/xterm-color-table.vim',{'on':'XtermColorTable'}
 Plug 'tell-k/vim-autopep8',{'for':'python'}
 Plug 'preservim/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'tomasr/molokai',{'do':'mkdir -p ../../colors;mv colors/molokai.vim ../../colors/'}
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 "Plug 'neoclide/coc.nvim', {'tag': 'v0.0.80'} 
@@ -98,6 +99,20 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'} "需要高版本node.js
 Plug 'tpope/vim-fugitive'
 call plug#end()
 "以下是插件设置
+let g:NERDTreeGitStatusShowClean = 1 " default: 0
+let g:NERDTreeGitStatusConcealBrackets = 1 " default: 0
+let g:NERDTreeGitStatusIndicatorMapCustom = {
+                \ 'Modified'  :'✱',
+                \ 'Staged'    :'✚',
+                \ 'Untracked' :'■',
+                \ 'Renamed'   :'➜',
+                \ 'Unmerged'  :'═',
+                \ 'Deleted'   :'✖',
+                \ 'Dirty'     :'✗',
+                \ 'Ignored'   :'☒',
+                \ 'Clean'     :'✔︎',
+                \ 'Unknown'   :'?',
+                \ }
 command BL Git blame --abbrev=5 -w --date=short --color-by-age
 "for coc.nvim
 "按下tab后可补全第一项并关闭弹出菜单
