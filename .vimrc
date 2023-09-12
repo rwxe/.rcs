@@ -88,12 +88,13 @@ filetype off				  " 为了vim-plug，如果不使用vim-plug就要去掉
 call plug#begin('~/.vim/plugged')
 "Plug 'ycm-core/YouCompleteMe' "YCM补全
 Plug 'preservim/tagbar'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'guns/xterm-color-table.vim',{'on':'XtermColorTable'}
 Plug 'tell-k/vim-autopep8',{'for':'python'}
 Plug 'preservim/nerdtree'
 Plug 'tomasr/molokai',{'do':'mkdir -p ../../colors;mv colors/molokai.vim ../../colors/'}
-Plug 'neoclide/coc.nvim', {'tag': 'v0.0.80'} "coc.nvim补全
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+"Plug 'neoclide/coc.nvim', {'tag': 'v0.0.80'} 
+Plug 'neoclide/coc.nvim', {'branch': 'release'} "需要高版本node.js
 Plug 'tpope/vim-fugitive'
 call plug#end()
 "以下是插件设置
@@ -157,9 +158,14 @@ let g:godef_split=3 """打开新窗口的时候左右split
 let g:godef_same_file_in_same_window=1 """函数在同一个文件中时不需要打开新窗口
 nnoremap <C-e> :NERDTreeToggle<CR>
 nnoremap <F8> :TagbarToggle<CR>
-let g:go_def_mapping_enabled=0 "禁用vim-go的gd映射，改用自定义映射
+"let g:go_def_mapping_enabled=0 "禁用vim-go的gd映射，改用自定义映射
 "let g:go_fmt_autosave=0 "禁用vim-go自动格式化
-nnoremap  gd :call CocAction('jumpDefinition', 'drop')<CR>
+"nnoremap  gd :call CocAction('jumpDefinition', 'drop')<CR>
+"coc GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
 
 
 command BlackBGToggle call BlackBGToggle()
