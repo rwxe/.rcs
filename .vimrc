@@ -46,14 +46,16 @@ set scrolloff=10 "上下边界偏移10行
 set cursorline "高亮当前行
 set cursorcolumn "高亮当前列
 set showcmd "显示命令
+set showmatch 
 let mapleader=";" "leader键
 if &filetype != 'c' "防止将0开头的数字识别为八进制
 	set nrformats-=octal
 endif
 
-"显示空格
+"显示空格和tab
 set list
 set listchars=space:·,tab::::
+
 "色彩主题
 "colorscheme solarized
 "let g:molokai_original = 1
@@ -82,8 +84,7 @@ hi Todo ctermfg=Black ctermbg=Yellow guifg=Black guibg=Yellow
 hi SpecialKey guifg=#303030
 set nocompatible			  " 去除VI一致性,必须要添加
 
-
-"vim-plug 列表
+"vim-plug list 列表
 filetype off				  " 为了vim-plug，如果不使用vim-plug就要去掉
 call plug#begin('~/.vim/plugged')
 "Plug 'ycm-core/YouCompleteMe' "YCM补全
@@ -98,7 +99,7 @@ Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'neoclide/coc.nvim', {'branch': 'release'} "需要高版本node.js
 Plug 'tpope/vim-fugitive'
 call plug#end()
-"以下是插件设置
+"以下是插件设置 plug-setting
 let g:NERDTreeGitStatusShowClean = 1 " default: 0
 let g:NERDTreeGitStatusConcealBrackets = 1 " default: 0
 let g:NERDTreeGitStatusIndicatorMapCustom = {
@@ -181,6 +182,8 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+
+"plug setting stop 以上是插件设置
 
 
 command BlackBGToggle call BlackBGToggle()
@@ -378,10 +381,15 @@ func CallAtNew()
 	"对于gd跳转，分裂新窗口
 "	nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
 endfunc
+func CallAtBufReadPost()
+	"高亮中文标点符号
+	syntax match ChinesePunctuation "[–—‘’“”…、。〈〉《》「」『』【】〔〕！（），．：；？]"
+	highlight ChinesePunctuation cterm=reverse ctermfg=Red ctermbg=White term=standout 
+endfunc
 func CallAtBufEnter()
 	call BracesMatch()
 	"对于gd跳转，分裂新窗口
-"nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
+	"nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
 endfunc
 func CallAtTabEnter()
 	call BracesMatch()
@@ -396,6 +404,7 @@ endfunc
 
 autocmd Filetype * call CallAtStarted()
 autocmd BufNewFile * call CallAtNew()
+autocmd BufReadPost * call CallAtBufReadPost()
 autocmd BufEnter * call CallAtBufEnter()
 autocmd TabEnter * call CallAtTabEnter()
 autocmd WinEnter * call CallAtWinEnter()
