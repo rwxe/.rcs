@@ -1,10 +1,11 @@
- "自动安装vim-plug
+"自动安装vim-plug
 "如果有代理，则可能需要设置$GIT_SSL_NO_VERIFY=true
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
 if empty(glob(data_dir . '/autoload/plug.vim'))
   silent execute '!curl --insecure -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
+"[START 常规设置]
 set nu "行号
 syntax enable "语法高亮
 set ruler "尺子，显示行列号
@@ -15,8 +16,9 @@ filetype plugin indent on
 set smartindent "智能缩进
 set history=1500 "历史1500行
 set tabstop=4 "tab 4格
+set expandtab "tab统一为空格
 set softtabstop=4 "tab 4格
-set shiftwidth=4 
+set shiftwidth=4 "左右移距离
 set hlsearch "高亮搜索
 set incsearch "高亮当前搜索
 set encoding=utf-8
@@ -48,48 +50,57 @@ set cursorcolumn "高亮当前列
 set showcmd "显示命令
 set showmatch 
 let mapleader=";" "leader键
-if &filetype != 'c' "防止将0开头的数字识别为八进制
-	set nrformats-=octal
-endif
+"if &filetype != 'c' "防止将0开头的数字识别为八进制
+"	set nrformats-=octal
+"endif
 
 "显示空格和tab
 set list
 set listchars=space:·,tab::::
+"[END 常规设置]
 
 "色彩主题
 "colorscheme solarized
 "let g:molokai_original = 1
 colorscheme molokai
-"启用真色彩
 
+"启用真色彩
 if exists('+termguicolors')
   let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
   let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
   set termguicolors
 endif
 
+" for WSL clipboard
+if system('uname -r') =~ "Microsoft"
+    augroup Yank
+        autocmd!
+        autocmd TextYankPost * :call system('/mnt/c/windows/system32/clip.exe ',@")
+        augroup END
+endif
 
 "自定义附加颜色设置
-"自定义颜色组1 御召御納戸 
-hi User1 ctermfg=15  ctermbg=23 cterm=bold guibg=#2e5c6e
-hi statusline term=bold,underline cterm=underline gui=underline ctermfg=Black ctermbg=White guibg=#f4a7b9 guifg=#08192d
+"自定义颜色组1 状态栏文件名 bg:omeshionando
+hi User1 ctermfg=15  ctermbg=23 cterm=bold,italic guibg=#2e5c6e
+"gui fg:kachi bg:ikkonzome
+hi statusline term=bold,underline cterm=underline ctermfg=Black ctermbg=White gui=underline guibg=#f4a7b9 guifg=#08192d
 hi statuslineNC term=None cterm=None ctermfg=White ctermbg=Black
 "hi Normal ctermbg=None guibg=NONE
 hi TabLineSel ctermfg=15  ctermbg=23 cterm=bold
 "hi Comment guifg=#91989f
-hi Visual guifg=#403D3D guibg=White
+hi Visual ctermfg=DarkGrey ctermbg=White guibg=#403d3d
 "hi String ctermfg=227
 hi Todo ctermfg=Black ctermbg=Yellow guifg=Black guibg=Yellow
-
 hi SpecialKey guifg=#303030
 set nocompatible			  " 去除VI一致性,必须要添加
 
-"vim-plug list 列表
+"vim-plug list 插件列表
 filetype off				  " 为了vim-plug，如果不使用vim-plug就要去掉
 call plug#begin('~/.vim/plugged')
 "Plug 'ycm-core/YouCompleteMe' "YCM补全
+Plug 'luochen1990/rainbow'
+Plug 'jiangmiao/auto-pairs'
 Plug 'preservim/tagbar'
-Plug 'guns/xterm-color-table.vim',{'on':'XtermColorTable'}
 Plug 'tell-k/vim-autopep8',{'for':'python'}
 Plug 'preservim/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
@@ -99,7 +110,39 @@ Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'neoclide/coc.nvim', {'branch': 'release'} "需要高版本node.js
 Plug 'tpope/vim-fugitive'
 call plug#end()
-"以下是插件设置 plug-setting
+"[START 插件设置 plug setting ]
+"
+"[START 彩虹括号]
+let g:rainbow_active = 1 "启用
+"nerdtree: 0 NERDTree与Rainbow会冲突，产生多余括号
+let g:rainbow_conf = {
+            \	'guifgs': ['deepskyblue', 'seagreen3', 'orange', 'deeppink', 'fuchsia'],
+            \	'ctermfgs': ['white', 'lightblue', 'lightgreen', 'lightyellow','magenta'],
+            \	'operators': '_,_',
+            \	'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
+            \	'separately': {
+            \		'*': {},
+            \		'tex': { 'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/'], },
+            \		'lisp': { 'guifgs': ['deepskyblue', 'seagreen3','orange', 'deeppink','fuchsia'], },
+            \		'vim': { 'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=vimFuncBody', 'start=/\[/ end=/\]/ containedin=vimFuncBody', 'start=/{/ end=/}/ fold containedin=vimFuncBody'], },
+            \		'html': { 'parentheses': ['start=/\v\<((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ >])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=("[^"]*"|'."'".'[^'."'".']*'."'".'|[^ '."'".'"><=`]*))?)*\>/ end=#</\z1># fold'], },
+            \		'css': 0,
+            \		'nerdtree': 0, 
+            \	}
+            \}
+"[END 彩虹括号]
+"
+"[START 关闭auto-pairs的快捷键]
+let g:AutoPairsShortcutFastWrap = ''
+let g:AutoPairsShortcutJump = ''
+let g:AutoPairsMapCh = 0
+let g:AutoPairsCenterLine = 0
+let g:AutoPairsMapSpace = 0
+let g:AutoPairsMultilineClose = 0
+"[END 关闭auto-pairs的快捷键]
+
+"[START NERDTree设置]
+nnoremap <C-e> :NERDTreeToggle<CR>
 let g:NERDTreeGitStatusShowClean = 1 " default: 0
 let g:NERDTreeGitStatusConcealBrackets = 1 " default: 0
 let g:NERDTreeGitStatusIndicatorMapCustom = {
@@ -114,28 +157,40 @@ let g:NERDTreeGitStatusIndicatorMapCustom = {
                 \ 'Clean'     :'✔︎',
                 \ 'Unknown'   :'?',
                 \ }
+"[END NERDTree设置]
+"
+"[START vim-fugitive设置]
+"git blame
 command BL Git blame --abbrev=5 -w --date=short --color-by-age
-"for coc.nvim
+"[END vim-fugitive设置]
+"
+"[START coc.nvim设置]
+"let g:coc_disable_startup_warning = 1
 "按下tab后可补全第一项并关闭弹出菜单
-let g:coc_disable_startup_warning = 1
-inoremap <expr> <Tab> pumvisible() ? coc#_select_confirm() : "<Tab>"
-"新版本vim
-"inoremap <silent><expr> <tab> coc#pum#visible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
+"旧版vim可用
+"inoremap <expr> <Tab> pumvisible() ? coc#_select_confirm() : "<Tab>"
+"新版vim可用
+inoremap <silent><expr> <tab> coc#pum#visible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
+"
 "格式化所选文本
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 "重命名
 nmap <leader>rn <Plug>(coc-rename)
 
+"coc GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+"[END coc.nvim设置]
 
-" for WSL clipboard
-if system('uname -r') =~ "Microsoft"
-    augroup Yank
-        autocmd!
-        autocmd TextYankPost * :call system('/mnt/c/windows/system32/clip.exe ',@")
-        augroup END
-endif
+"[START tagbar设置]
+nnoremap <F8> :TagbarToggle<CR>
 let g:tagbar_ctags_bin='/usr/bin/ctags' "tagbar需要需要知道ctags路径
+"[END tagbar设置]
+"
+"[START YCM设置]
 let g:ycm_key_invoke_completion = '<C-N><C-P>' "手动触发补全
 let g:ycm_auto_trigger = 1 "自动触发补全候选词
 let g:ycm_auto_hover = 'CursorHold' "自动悬停文档
@@ -170,24 +225,23 @@ let g:ycm_filetype_whitelist = {
 			\ }
 
 "nnoremap K :YcmCompleter GoTo<CR>
+"[END YCM 设置]
+"
+"[START vim-go 设置]
 let g:godef_split=3 """打开新窗口的时候左右split
 let g:godef_same_file_in_same_window=1 """函数在同一个文件中时不需要打开新窗口
-nnoremap <C-e> :NERDTreeToggle<CR>
-nnoremap <F8> :TagbarToggle<CR>
 "let g:go_def_mapping_enabled=0 "禁用vim-go的gd映射，改用自定义映射
 "let g:go_fmt_autosave=0 "禁用vim-go自动格式化
-"nnoremap  gd :call CocAction('jumpDefinition', 'drop')<CR>
-"coc GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+"[END vim-go 设置]
 
-"plug setting stop 以上是插件设置
+"[END 插件设置 plug setting ]
 
 
-command BlackBGToggle call BlackBGToggle()
-command WrapToggle call WrapToggle()
+command BlackBGToggle call BlackBGToggle() "黑色背景开关
+command WrapToggle call WrapToggle() "快速折叠开关
+command ShowSyntaxGroupBelongs call ShowSyntaxGroupBelongs() "显示当前字符的语法高亮组
+command ShowNonASCII call ShowNonASCII() "显示非ASCII字符开关
+command ShowChinesePunctuation call ShowChinesePunctuation() "显示中文标点字符开关
 command W w
 command WQ wq
 command Wq wq
@@ -196,8 +250,9 @@ command WA wa
 command Q q
 command Qa qa
 command QA qa
+
+"背景黑色开关
 func BlackBGToggle()
-	"背景黑色开关
 	if !exists('g:is_blacked')
 		let g:is_blacked=1
 	endif
@@ -209,6 +264,8 @@ func BlackBGToggle()
 		let g:is_blacked=1
 	endif
 endfunc
+
+"快速折叠开关
 func WrapToggle()
 	if !exists('g:is_wrapped')
 		let g:is_wrapped=0
@@ -227,7 +284,22 @@ func WrapToggle()
 	endif
 endfunc
 
+"显示当前字符的语法高亮组
+func ShowSyntaxGroupBelongs()
+    :let s = synID(line('.'), col('.'), 1) | echo synIDattr(s, 'name') . ' -> ' . synIDattr(synIDtrans(s), 'name')
+endfunc
+
+"显示非ASCII字符开关
+func ShowNonASCII()
+    call feedkeys("/[^\\x00-\\x7F]\<CR>") "非扩展ASCII
+endfunc
+"显示中文标点字符开关
+func ShowChinesePunctuation()
+    call feedkeys("/[。？！，、；：“”‘（）《》〈〉【】『』「」﹃﹄〔〕…—～﹏￥]\<CR>")
+endfunc
+
 map <F5> :call CompileAndRun()<CR>
+
 func CompileAndRun()
 	exec "wa"
 	if &filetype == 'c'
@@ -253,6 +325,7 @@ func CompileAndRun()
 	endif
 endfunc
 map <F6> :call RunDebugger()<CR>
+
 func RunDebugger()
 	exec "wa"
 	if &filetype == 'c'
@@ -270,6 +343,7 @@ func RunDebugger()
 	endif
 endfunc
 	
+
 func BracesMatch()
 	"手写的括号匹配
 	inoremap (	()<left>
@@ -301,7 +375,6 @@ func BracesMatch()
 	elseif &filetype=='markdown'
 		inoremap ``` ``````<left><left><left><CR><up><END>
 	elseif &filetype=='python'
-		set expandtab
 		inoremap """ """"""<left><left><left>
 		inoremap ''' ''''''<left><left><left>
 		inoremap < <
@@ -317,6 +390,7 @@ func BracesMatch()
 		inoremap {#<BACKSPACE> {#
 	endif
 endfunc
+
 
 func AutoTitle()
 	"自动标题
@@ -360,6 +434,7 @@ func AutoTitle()
 	endif
 endfunc
 
+
 func FoldMethod()
 	if &filetype=='python'
 		set foldmethod=indent
@@ -371,33 +446,33 @@ endfunc
 
 
 "启动时会运行的函数
+
 func CallAtStarted()
 endfunc
 
 "新建文件时会运行的函数
+
 func CallAtNew()
 	call AutoTitle()
-	call BracesMatch()
 	"对于gd跳转，分裂新窗口
 "	nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
 endfunc
+
 func CallAtBufReadPost()
-	"高亮中文标点符号
-	syntax match ChinesePunctuation "[–—‘’“”…、。〈〉《》「」『』【】〔〕！（），．：；？]"
-	highlight ChinesePunctuation cterm=reverse ctermfg=Red ctermbg=White term=standout 
 endfunc
+
 func CallAtBufEnter()
-	call BracesMatch()
+	"call BracesMatch() 手写括号匹配
 	"对于gd跳转，分裂新窗口
 	"nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
 endfunc
+
 func CallAtTabEnter()
-	call BracesMatch()
 	"对于gd跳转，分裂新窗口
 "nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
 endfunc
+
 func CallAtWinEnter()
-	call BracesMatch()
 	"对于gd跳转，分裂新窗口
 "nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
 endfunc
