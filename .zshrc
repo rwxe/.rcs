@@ -99,6 +99,10 @@ alias sl="ls"
 alias cp="cp -i"
 alias mv="mv -i"
 alias rm="trash-put"
+
+#for WSL 
+alias pw="powershell.exe "
+alias pwii="powershell.exe ii ." # 在当前路径打开文件管理器
 # User configuration
 # 替换提示符中的>
 PROMPT=${PROMPT/>/🌀}
