@@ -49,6 +49,7 @@ set cursorline "高亮当前行
 set cursorcolumn "高亮当前列
 set showcmd "显示命令
 set showmatch 
+set updatetime=1000
 let mapleader=";" "leader键
 "if &filetype != 'c' "防止将0开头的数字识别为八进制
 "	set nrformats-=octal
@@ -85,9 +86,9 @@ call CustomHighlight()
 
 "启用真色彩
 if exists('+termguicolors')
-  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-  set termguicolors
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+    set termguicolors
 endif
 "[END 自定义色彩主题]
 
@@ -96,7 +97,7 @@ if system('uname -r') =~ "Microsoft"
     augroup Yank
         autocmd!
         autocmd TextYankPost * :call system('/mnt/c/windows/system32/clip.exe ',@")
-        augroup END
+    augroup END
 endif
 
 
@@ -131,20 +132,20 @@ let rainbow_guifgs_lightbg = ['darkblue', 'webgreen', 'orangered3', 'red3', 'web
 let rainbow_ctermfgs_darkbg = ['white', 'lightblue', 'lightgreen', 'lightyellow','magenta']
 let rainbow_ctermfgs_lightbg = ['black', 'darkblue', 'darkgreen', 'darkyellow','darkmagenta']
 let g:rainbow_conf = {
-            \	'guifgs': (&background == "dark"? rainbow_guifgs_darkbg : rainbow_guifgs_lightbg),
-            \	'ctermfgs': (&background == "dark"? rainbow_ctermfgs_darkbg : rainbow_ctermfgs_lightbg),
-            \	'operators': '_,_',
-            \	'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
-            \	'separately': {
-            \		'*': {},
-            \		'tex': { 'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/'], },
-            \		'lisp': { 'guifgs': ['deepskyblue', 'seagreen3','orange', 'deeppink','fuchsia'], },
-            \		'vim': { 'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=vimFuncBody', 'start=/\[/ end=/\]/ containedin=vimFuncBody', 'start=/{/ end=/}/ fold containedin=vimFuncBody'], },
-            \		'html': { 'parentheses': ['start=/\v\<((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ >])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=("[^"]*"|'."'".'[^'."'".']*'."'".'|[^ '."'".'"><=`]*))?)*\>/ end=#</\z1># fold'], },
-            \		'css': 0,
-            \		'nerdtree': 0, 
-            \	}
-            \}
+\	'guifgs': (&background == "dark"? rainbow_guifgs_darkbg : rainbow_guifgs_lightbg),
+\	'ctermfgs': (&background == "dark"? rainbow_ctermfgs_darkbg : rainbow_ctermfgs_lightbg),
+\	'operators': '_,_',
+\	'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
+\	'separately': {
+    \		'*': {},
+    \		'tex': { 'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/'], },
+    \		'lisp': { 'guifgs': ['deepskyblue', 'seagreen3','orange', 'deeppink','fuchsia'], },
+    \		'vim': { 'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=vimFuncBody', 'start=/\[/ end=/\]/ containedin=vimFuncBody', 'start=/{/ end=/}/ fold containedin=vimFuncBody'], },
+    \		'html': { 'parentheses': ['start=/\v\<((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ >])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=("[^"]*"|'."'".'[^'."'".']*'."'".'|[^ '."'".'"><=`]*))?)*\>/ end=#</\z1># fold'], },
+    \		'css': 0,
+    \		'nerdtree': 0, 
+    \	}
+    \}
 "[END 彩虹括号]
 "
 "[START 关闭auto-pairs的快捷键]
@@ -162,17 +163,17 @@ nnoremap <C-e> :NERDTreeToggle<CR>
 let g:NERDTreeGitStatusShowClean = 1 " default: 0
 let g:NERDTreeGitStatusConcealBrackets = 1 " default: 0
 let g:NERDTreeGitStatusIndicatorMapCustom = {
-                \ 'Modified'  :'✱',
-                \ 'Staged'    :'✚',
-                \ 'Untracked' :'■',
-                \ 'Renamed'   :'➜',
-                \ 'Unmerged'  :'═',
-                \ 'Deleted'   :'✖',
-                \ 'Dirty'     :'✗',
-                \ 'Ignored'   :'☒',
-                \ 'Clean'     :'✔︎',
-                \ 'Unknown'   :'?',
-                \ }
+            \ 'Modified'  :'✱',
+            \ 'Staged'    :'✚',
+            \ 'Untracked' :'■',
+            \ 'Renamed'   :'➜',
+            \ 'Unmerged'  :'═',
+            \ 'Deleted'   :'✖',
+            \ 'Dirty'     :'✗',
+            \ 'Ignored'   :'☒',
+            \ 'Clean'     :'✔︎',
+            \ 'Unknown'   :'?',
+            \ }
 "[END NERDTree设置]
 "
 "[START vim-fugitive设置]
@@ -182,15 +183,19 @@ command GDV Gvdiffsplit "git diff，暂存区和工作区的差异
 "[END vim-fugitive设置]
 "
 "[START vim-gitgutter设置]
-nmap <C-S-A-[> <Plug>(GitGutterNextHunk)
-nmap <C-S-A-]> <Plug>(GitGutterNextHunk)
+nmap <C-A-S-Down>  <Plug>(GitGutterNextHunk) "下一个修改处 IDEA like
+nmap <C-A-S-Up>  <Plug>(GitGutterPrevHunk) "上一个修改处 IDEA like
 nmap <leader>hs <Plug>(GitGutterStageHunk)  "暂存修改处
 nmap <leader>hu <Plug>(GitGutterUndoHunk)   "取消修改处
 nmap <leader>hp <Plug>(GitGutterPreviewHunk)"预览修改处
+command! GQF GitGutterQuickFix | copen "显示所有修改处到copen列表
 "[END vim-gitgutter设置]
 "
 "[START coc.nvim设置]
 "let g:coc_disable_startup_warning = 1
+"跳转警告和错误
+nmap <leader>ep     <Plug>(coc-diagnostic-prev)
+nmap <leader>en   <Plug>(coc-diagnostic-next)
 "按下tab后可补全第一项并关闭弹出菜单
 "旧版coc可用
 inoremap <expr> <Tab> pumvisible() ? coc#_select_confirm() : "<Tab>"
@@ -232,22 +237,22 @@ let g:ycm_open_loclist_on_ycm_diags = 1
 "let g:ycm_add_preview_to_completeopt = 0
 "let g:ycm_key_list_stop_completion = ['<C-y>']
 let g:ycm_filetype_whitelist = {
-			\ "vim":1,
-			\ "c":1,
-			\ "cpp":1,
-			\ "cs":1,
-			\ "python":1,
-			\ "html":1,
-			\ "htmldjango":1,
-			\ "php":1,
-			\ "go":1,
-			\ "rust":1,
-			\ "java":1,
-			\ "JavaScript":1,
-			\ "TypeScript":1,
-			\ "sh":1,
-			\ "zsh":1,
-			\ }
+            \ "vim":1,
+            \ "c":1,
+            \ "cpp":1,
+            \ "cs":1,
+            \ "python":1,
+            \ "html":1,
+            \ "htmldjango":1,
+            \ "php":1,
+            \ "go":1,
+            \ "rust":1,
+            \ "java":1,
+            \ "JavaScript":1,
+            \ "TypeScript":1,
+            \ "sh":1,
+            \ "zsh":1,
+            \ }
 
 "nnoremap K :YcmCompleter GoTo<CR>
 "[END YCM 设置]
@@ -287,34 +292,34 @@ func BackgroundColorToggle()
         let l:bg_color_on=0
     endif
 
-	if l:bg_color_on==1
+    if l:bg_color_on==1
         let g:bgct_bg_color_hi_group = execute('hi Normal')
-		exec 'hi Normal ctermbg=None guibg=NONE'
-	else
+        exec 'hi Normal ctermbg=None guibg=NONE'
+    else
         let l:bg_hi_group_args = split(g:bgct_bg_color_hi_group, '\s\+')
         let l:exec_hi_str = join(l:bg_hi_group_args[2:], ' ')
         exec 'hi Normal ' . exec_hi_str
-	endif
+    endif
 
 endfunc
 
 "快速折叠开关
 func WrapToggle()
-	if !exists('g:is_wrapped')
-		let g:is_wrapped=0
-	endif
-	if g:is_wrapped==0
-		nmap j gj
-		nmap k gk
-		set wrap
-		let g:is_wrapped=1
-	else
-		"使用unmap系列命令，后面不要有空格
-		nunmap j
-		nunmap k
-		set nowrap
-		let g:is_wrapped=0
-	endif
+    if !exists('g:is_wrapped')
+        let g:is_wrapped=0
+    endif
+    if g:is_wrapped==0
+        nmap j gj
+        nmap k gk
+        set wrap
+        let g:is_wrapped=1
+    else
+        "使用unmap系列命令，后面不要有空格
+        nunmap j
+        nunmap k
+        set nowrap
+        let g:is_wrapped=0
+    endif
 endfunc
 
 "显示当前字符的语法高亮组
@@ -334,145 +339,146 @@ endfunc
 map <F5> :call CompileAndRun()<CR>
 
 func CompileAndRun()
-	exec "wa"
-	if &filetype == 'c'
-		exec "!g++ % -o %< &&  ./%<"
-	elseif &filetype == 'cpp'
-		exec "!g++ % -o %< &&  ./%<"
-	elseif &filetype == 'java'
-		exec "!javac -encoding utf-8 -d . % &&	java %<"
-	elseif &filetype == 'sh'
-		exec "!./%"
-	elseif &filetype == 'python'
-		exec "! python %"
-	elseif &filetype == 'html'
-		exec "!firefox % &"
-	elseif &filetype == 'go'
-		exec "!go run %"
-	elseif &filetype == 'rust'
-		exec "!rustc % &&  ./%<"
-	elseif &filetype == 'mkd'
-		exec "!~/.vim/markdown.pl % > %.html & && firefox %.html &"
-	elseif &filetype == 'markdown'
-		exec '!firefox %'
-	endif
+    exec "wa"
+    if &filetype == 'c'
+        exec "!g++ % -o %< &&  ./%<"
+    elseif &filetype == 'cpp'
+        exec "!g++ % -o %< &&  ./%<"
+    elseif &filetype == 'java'
+        exec "!javac -encoding utf-8 -d . % &&	java %<"
+    elseif &filetype == 'sh'
+        exec "!./%"
+    elseif &filetype == 'python'
+        exec "! python %"
+    elseif &filetype == 'html'
+        exec "!firefox % &"
+    elseif &filetype == 'go'
+        exec "!go run %"
+    elseif &filetype == 'rust'
+        exec "!rustc % &&  ./%<"
+    elseif &filetype == 'mkd'
+        exec "!~/.vim/markdown.pl % > %.html & && firefox %.html &"
+    elseif &filetype == 'markdown'
+        exec '!firefox %'
+    endif
 endfunc
 map <F6> :call RunDebugger()<CR>
 
 func RunDebugger()
-	exec "wa"
-	if &filetype == 'c'
-		exec "!g++ -g % -o %< && gdb %<"
-	elseif &filetype == 'cpp'
-	elseif &filetype == 'java'
-	elseif &filetype == 'sh'
-	elseif &filetype == 'python'
-		exec '!python -m ipdb %'
-	elseif &filetype == 'html'
-	elseif &filetype == 'go'
-		exec '!dlv debug %'
-	elseif &filetype == 'mkd'
-	elseif &filetype == 'markdown'
-	endif
+    exec "wa"
+    if &filetype == 'c'
+        exec "!g++ -g % -o %< && gdb %<"
+    elseif &filetype == 'cpp'
+    elseif &filetype == 'java'
+    elseif &filetype == 'sh'
+    elseif &filetype == 'python'
+        exec '!python -m ipdb %'
+    elseif &filetype == 'html'
+    elseif &filetype == 'go'
+        exec '!dlv debug %'
+    elseif &filetype == 'mkd'
+    elseif &filetype == 'markdown'
+    endif
 endfunc
-	
+
 
 func BracesMatch()
-	"手写的括号匹配
-	inoremap (	()<left>
-	inoremap [	[]<left>
-	inoremap {	{}<left>
-	inoremap '	''<left>
-	inoremap " ""<left>
-	inoremap ` ``<left>
-	
-	inoremap () ()
-	inoremap [] []
-	inoremap {} {}
-	inoremap '' ''
-	inoremap "" ""
-	inoremap `` ``
+    "手写的括号匹配
+    inoremap (	()<left>
+    inoremap [	[]<left>
+    inoremap {	{}<left>
+    inoremap '	''<left>
+    inoremap " ""<left>
+    inoremap ` ``<left>
 
-	inoremap (<BACKSPACE> (
-	inoremap [<BACKSPACE> [
-	inoremap {<BACKSPACE> {
-	inoremap '<BACKSPACE> '
-	inoremap "<BACKSPACE> "
-	if &filetype=='vim'
-		inoremap " "
-	elseif &filetype=='cpp'||&filetype=='c'||&filetype=='java' ||&filetype=='css'
-		inoremap {<CR> {<CR>}<up><end><CR>
-	elseif &filetype=='go'
-		inoremap (<CR> (<CR>)<up><end><CR>
-		inoremap {<CR> {<CR>}<up><end><CR>
-	elseif &filetype=='markdown'
-		inoremap ``` ``````<left><left><left><CR><up><END>
-	elseif &filetype=='python'
-		inoremap """ """"""<left><left><left>
-		inoremap ''' ''''''<left><left><left>
-		inoremap < <
-		inoremap <<BACKSPACE> <<BACKSPACE>
-	elseif &filetype=='php' || &filetype=='html' || &filetype=='htmldjango'
-		inoremap < <><left>
-		inoremap <<BACKSPACE> <
-		inoremap {<CR> {<CR>}<up><end><CR>
-		"For Django
-		inoremap {% {%	 %}<left><left><left><left>
-		inoremap {%<BACKSPACE> {%
-		inoremap {# {#	 #}<left><left><left><left>
-		inoremap {#<BACKSPACE> {#
-	endif
+    inoremap () ()
+    inoremap [] []
+    inoremap {} {}
+    inoremap '' ''
+    inoremap "" ""
+    inoremap `` ``
+
+    inoremap (<BACKSPACE> (
+    inoremap [<BACKSPACE> [
+    inoremap {<BACKSPACE> {
+    inoremap '<BACKSPACE> '
+    inoremap "<BACKSPACE> "
+    
+    if &filetype=='vim'
+        inoremap " "
+    elseif &filetype=='cpp'||&filetype=='c'||&filetype=='java' ||&filetype=='css'
+        inoremap {<CR> {<CR>}<up><end><CR>
+    elseif &filetype=='go'
+        inoremap (<CR> (<CR>)<up><end><CR>
+        inoremap {<CR> {<CR>}<up><end><CR>
+    elseif &filetype=='markdown'
+        inoremap ``` ``````<left><left><left><CR><up><END>
+    elseif &filetype=='python'
+        inoremap """ """"""<left><left><left>
+        inoremap ''' ''''''<left><left><left>
+        inoremap < <
+        inoremap <<BACKSPACE> <<BACKSPACE>
+    elseif &filetype=='php' || &filetype=='html' || &filetype=='htmldjango'
+        inoremap < <><left>
+        inoremap <<BACKSPACE> <
+        inoremap {<CR> {<CR>}<up><end><CR>
+        "For Django
+        inoremap {% {%	 %}<left><left><left><left>
+        inoremap {%<BACKSPACE> {%
+        inoremap {# {#	 #}<left><left><left><left>
+        inoremap {#<BACKSPACE> {#
+    endif
 endfunc
 
 
 func AutoTitle()
-	"自动标题
-	if &filetype=='sh'
-		call setline(1,'#!/usr/bin/env bash')
-		call feedkeys('o','t')
-	elseif &filetype=='python'
-		call setline(1,'# -*-coding:utf-8-*-')
-		call feedkeys('o','t')
-	elseif &filetype=='c'
-		call setline(1,'#include<stdio.h>')
-		call setline(2,'int main()')
-		call setline(3,'{')
-		call setline(4,'	return 0;')
-		call setline(5,'}')
-		call feedkeys('3Go','t')
-	elseif &filetype=='cpp'
-		call setline(1,'#include<iostream>')
-		call setline(2,'using namespace std;')
-		call setline(3,'int main()')
-		call setline(4,'{')
-		call setline(5,'	return 0;')
-		call setline(6,'}')
-		call feedkeys('4Go','t')
-	elseif &filetype=='java'
-		call setline(1,'public class '.expand('%:t:r'))
-		call setline(2,'{')
-		call setline(3,'}')
-		call feedkeys('2Go','t')
-	elseif &filetype=='html' || &filetype=='php'
-		call setline(1,'<!DOCTYPE html>')
-		call setline(2,'<html>')
-		call setline(3,'<head>')
-		call setline(4,'<meta charset="utf-8">')
-		call setline(5,'	<title></title>')
-		call setline(6,'</head>')
-		call setline(7,'<body>')
-		call setline(8,'	')
-		call setline(9,'</body>')
-		call setline(10,'</html>')
-	endif
+    "自动标题
+    if &filetype=='sh'
+        call setline(1,'#!/usr/bin/env bash')
+        call feedkeys('o','t')
+    elseif &filetype=='python'
+        call setline(1,'# -*-coding:utf-8-*-')
+        call feedkeys('o','t')
+    elseif &filetype=='c'
+        call setline(1,'#include<stdio.h>')
+        call setline(2,'int main()')
+        call setline(3,'{')
+        call setline(4,'	return 0;')
+        call setline(5,'}')
+        call feedkeys('3Go','t')
+    elseif &filetype=='cpp'
+        call setline(1,'#include<iostream>')
+        call setline(2,'using namespace std;')
+        call setline(3,'int main()')
+        call setline(4,'{')
+        call setline(5,'	return 0;')
+        call setline(6,'}')
+        call feedkeys('4Go','t')
+    elseif &filetype=='java'
+        call setline(1,'public class '.expand('%:t:r'))
+        call setline(2,'{')
+        call setline(3,'}')
+        call feedkeys('2Go','t')
+    elseif &filetype=='html' || &filetype=='php'
+        call setline(1,'<!DOCTYPE html>')
+        call setline(2,'<html>')
+        call setline(3,'<head>')
+        call setline(4,'<meta charset="utf-8">')
+        call setline(5,'	<title></title>')
+        call setline(6,'</head>')
+        call setline(7,'<body>')
+        call setline(8,'	')
+        call setline(9,'</body>')
+        call setline(10,'</html>')
+    endif
 endfunc
 
 
 func FoldMethod()
-	if &filetype=='python'
-		set foldmethod=indent
-		set foldlevel=20
-	endif
+    if &filetype=='python'
+        set foldmethod=indent
+        set foldlevel=20
+    endif
 endfunc
 
 
@@ -486,28 +492,28 @@ endfunc
 "新建文件时会运行的函数
 
 func CallAtNew()
-	call AutoTitle()
-	"对于gd跳转，分裂新窗口
-"	nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
+    call AutoTitle()
+    "对于gd跳转，分裂新窗口
+    "	nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
 endfunc
 
 func CallAtBufReadPost()
 endfunc
 
 func CallAtBufEnter()
-	"call BracesMatch() 手写括号匹配
-	"对于gd跳转，分裂新窗口
-	"nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
+    "call BracesMatch() 手写括号匹配
+    "对于gd跳转，分裂新窗口
+    "nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
 endfunc
 
 func CallAtTabEnter()
-	"对于gd跳转，分裂新窗口
-"nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
+    "对于gd跳转，分裂新窗口
+    "nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
 endfunc
 
 func CallAtWinEnter()
-	"对于gd跳转，分裂新窗口
-"nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
+    "对于gd跳转，分裂新窗口
+    "nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
 endfunc
 
 autocmd Filetype * call CallAtStarted()
@@ -523,7 +529,7 @@ nnoremap <c-h> <c-w>h
 nnoremap <c-j> <c-w>j
 nnoremap <c-k> <c-w>k
 nnoremap <c-l> <c-w>l
-"跳转行首尾
+"跳转行首尾 helix like
 nnoremap gh 0
 nnoremap gl $
 "tab标签切换
