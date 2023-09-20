@@ -1,10 +1,10 @@
 "自动安装vim-plug
 "如果有代理，则可能需要设置$GIT_SSL_NO_VERIFY=true
-let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
-if empty(glob(data_dir . '/autoload/plug.vim'))
-  silent execute '!curl --insecure -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
+"let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+"if empty(glob(data_dir . '/autoload/plug.vim'))
+"  silent execute '!curl --insecure -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+"  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+"endif
 "[START 常规设置]
 set nu "行号
 syntax enable "语法高亮
@@ -30,6 +30,7 @@ set nowrap "不折叠行
 set t_Co=256 "启用256色
 set laststatus=2 "2为一直启用状态栏
 set wildmenu "底线命令模式补全栏
+set statusline = "手写状态栏
 set statusline+=%1*%t%*  "文件名
 set statusline+=\ %<%F "文件绝对路径
 set statusline+=\ %{''.(&fenc==&enc?&enc:('['.&fenc.','.&enc.']'))} "fenc和enc相同就显示enc,不同就显示[fenc,enc]
@@ -41,7 +42,6 @@ set statusline+=%m[%B]			 "修改标记,光标处字符unicode
 set statusline+=\ %l			 "光标所在行
 set statusline+=\,%v			 "光标所在列
 set statusline+=\ %r%w\%p%%    "只读标记，preview标记，当前百分比标记
-set background=dark
 set backspace=indent,eol,start
 set complete-=i "无插件情况下，i选项会递归扫描文件查找符号，非常耗时
 set scrolloff=10 "上下边界偏移10行
@@ -54,15 +54,34 @@ let mapleader=";" "leader键
 "	set nrformats-=octal
 "endif
 
+"[END 常规设置]
+
+
+"[START 自定义色彩主题]
 "显示空格和tab
 set list
 set listchars=space:·,tab::::
-"[END 常规设置]
-
-"色彩主题
-"colorscheme solarized
-"let g:molokai_original = 1
+set background=dark "背景色调，会影响其他插件的颜色显示
 colorscheme molokai
+"let g:molokai_original = 1
+"colorscheme xcodelighthc
+func CustomHighlight()
+    "自定义附加颜色设置
+    "自定义颜色组1 状态栏文件名 bg:omeshionando
+    hi User1 ctermfg=15  ctermbg=23 cterm=bold,italic guibg=#2e5c6e
+    "gui fg:kachi bg:ikkonzome
+    hi statusline term=bold,underline cterm=underline ctermfg=Black ctermbg=White gui=underline guibg=#f4a7b9 guifg=#08192d
+    hi statuslineNC term=None cterm=None ctermfg=White ctermbg=Black
+    "hi Normal ctermbg=None guibg=NONE
+    hi TabLineSel ctermfg=15  ctermbg=23 cterm=bold
+    "hi Comment guifg=#91989f
+    hi Visual ctermfg=DarkGrey ctermbg=White guibg=#403d3d
+    "hi String ctermfg=227
+    hi Todo ctermfg=Black ctermbg=Yellow guifg=Black guibg=Yellow
+    hi SpecialKey guifg=#303030
+
+endfunc
+call CustomHighlight()
 
 "启用真色彩
 if exists('+termguicolors')
@@ -70,6 +89,7 @@ if exists('+termguicolors')
   let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
   set termguicolors
 endif
+"[END 自定义色彩主题]
 
 " for WSL clipboard
 if system('uname -r') =~ "Microsoft"
@@ -79,45 +99,40 @@ if system('uname -r') =~ "Microsoft"
         augroup END
 endif
 
-"自定义附加颜色设置
-"自定义颜色组1 状态栏文件名 bg:omeshionando
-hi User1 ctermfg=15  ctermbg=23 cterm=bold,italic guibg=#2e5c6e
-"gui fg:kachi bg:ikkonzome
-hi statusline term=bold,underline cterm=underline ctermfg=Black ctermbg=White gui=underline guibg=#f4a7b9 guifg=#08192d
-hi statuslineNC term=None cterm=None ctermfg=White ctermbg=Black
-"hi Normal ctermbg=None guibg=NONE
-hi TabLineSel ctermfg=15  ctermbg=23 cterm=bold
-"hi Comment guifg=#91989f
-hi Visual ctermfg=DarkGrey ctermbg=White guibg=#403d3d
-"hi String ctermfg=227
-hi Todo ctermfg=Black ctermbg=Yellow guifg=Black guibg=Yellow
-hi SpecialKey guifg=#303030
+
 set nocompatible			  " 去除VI一致性,必须要添加
 
 "vim-plug list 插件列表
 filetype off				  " 为了vim-plug，如果不使用vim-plug就要去掉
 call plug#begin('~/.vim/plugged')
-"Plug 'ycm-core/YouCompleteMe' "YCM补全
+"Plug 'rwxe/vimbackgroundcolortoggle'
+Plug 'guns/xterm-color-table.vim'
+Plug 'tomasr/molokai',{'do':'mkdir -p ../../colors;mv colors/molokai.vim ../../colors/'}
 Plug 'luochen1990/rainbow'
 Plug 'jiangmiao/auto-pairs'
-Plug 'preservim/tagbar'
 Plug 'tell-k/vim-autopep8',{'for':'python'}
-Plug 'preservim/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'tomasr/molokai',{'do':'mkdir -p ../../colors;mv colors/molokai.vim ../../colors/'}
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+"Plug 'ycm-core/YouCompleteMe' "YCM补全
 "Plug 'neoclide/coc.nvim', {'tag': 'v0.0.80'} 
 Plug 'neoclide/coc.nvim', {'branch': 'release'} "需要高版本node.js
+Plug 'preservim/tagbar'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+Plug 'preservim/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 call plug#end()
 "[START 插件设置 plug setting ]
 "
 "[START 彩虹括号]
 let g:rainbow_active = 1 "启用
 "nerdtree: 0 NERDTree与Rainbow会冲突，产生多余括号
+let rainbow_guifgs_darkbg = ['deepskyblue', 'seagreen3', 'orange', 'deeppink', 'fuchsia']
+let rainbow_guifgs_lightbg = ['darkblue', 'webgreen', 'orangered3', 'red3', 'webpurple']
+let rainbow_ctermfgs_darkbg = ['white', 'lightblue', 'lightgreen', 'lightyellow','magenta']
+let rainbow_ctermfgs_lightbg = ['black', 'darkblue', 'darkgreen', 'darkyellow','darkmagenta']
 let g:rainbow_conf = {
-            \	'guifgs': ['deepskyblue', 'seagreen3', 'orange', 'deeppink', 'fuchsia'],
-            \	'ctermfgs': ['white', 'lightblue', 'lightgreen', 'lightyellow','magenta'],
+            \	'guifgs': (&background == "dark"? rainbow_guifgs_darkbg : rainbow_guifgs_lightbg),
+            \	'ctermfgs': (&background == "dark"? rainbow_ctermfgs_darkbg : rainbow_ctermfgs_lightbg),
             \	'operators': '_,_',
             \	'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
             \	'separately': {
@@ -141,6 +156,7 @@ let g:AutoPairsMapSpace = 0
 let g:AutoPairsMultilineClose = 0
 "[END 关闭auto-pairs的快捷键]
 
+
 "[START NERDTree设置]
 nnoremap <C-e> :NERDTreeToggle<CR>
 let g:NERDTreeGitStatusShowClean = 1 " default: 0
@@ -162,15 +178,24 @@ let g:NERDTreeGitStatusIndicatorMapCustom = {
 "[START vim-fugitive设置]
 "git blame
 command BL Git blame --abbrev=5 -w --date=short --color-by-age
+command GDV Gvdiffsplit "git diff，暂存区和工作区的差异
 "[END vim-fugitive设置]
+"
+"[START vim-gitgutter设置]
+nmap <C-S-A-[> <Plug>(GitGutterNextHunk)
+nmap <C-S-A-]> <Plug>(GitGutterNextHunk)
+nmap <leader>hs <Plug>(GitGutterStageHunk)  "暂存修改处
+nmap <leader>hu <Plug>(GitGutterUndoHunk)   "取消修改处
+nmap <leader>hp <Plug>(GitGutterPreviewHunk)"预览修改处
+"[END vim-gitgutter设置]
 "
 "[START coc.nvim设置]
 "let g:coc_disable_startup_warning = 1
 "按下tab后可补全第一项并关闭弹出菜单
-"旧版vim可用
-"inoremap <expr> <Tab> pumvisible() ? coc#_select_confirm() : "<Tab>"
-"新版vim可用
-inoremap <silent><expr> <tab> coc#pum#visible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
+"旧版coc可用
+inoremap <expr> <Tab> pumvisible() ? coc#_select_confirm() : "<Tab>"
+"新版coc可用
+"inoremap <silent><expr> <tab> coc#pum#visible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
 "
 "格式化所选文本
 xmap <leader>f  <Plug>(coc-format-selected)
@@ -237,8 +262,9 @@ let g:godef_same_file_in_same_window=1 """函数在同一个文件中时不需�
 "[END 插件设置 plug setting ]
 
 
-command BlackBGToggle call BlackBGToggle() "黑色背景开关
+command BC call BackgroundColorToggle() "背景色开关
 command WrapToggle call WrapToggle() "快速折叠开关
+command SSGB call ShowSyntaxGroupBelongs() "显示当前字符的语法高亮组
 command ShowSyntaxGroupBelongs call ShowSyntaxGroupBelongs() "显示当前字符的语法高亮组
 command ShowNonASCII call ShowNonASCII() "显示非ASCII字符开关
 command ShowChinesePunctuation call ShowChinesePunctuation() "显示中文标点字符开关
@@ -251,18 +277,25 @@ command Q q
 command Qa qa
 command QA qa
 
-"背景黑色开关
-func BlackBGToggle()
-	if !exists('g:is_blacked')
-		let g:is_blacked=1
-	endif
-	if g:is_blacked==1
+"背景色开关
+func BackgroundColorToggle()
+    let l:bg_hi_group = execute('hi Normal')
+
+    if l:bg_hi_group =~# 'guibg' || l:bg_hi_group =~# 'ctermbg'
+        let l:bg_color_on=1
+    else
+        let l:bg_color_on=0
+    endif
+
+	if l:bg_color_on==1
+        let g:bgct_bg_color_hi_group = execute('hi Normal')
 		exec 'hi Normal ctermbg=None guibg=NONE'
-		let g:is_blacked=0
 	else
-		exec 'hi Normal ctermbg=Black guibg=Black'
-		let g:is_blacked=1
+        let l:bg_hi_group_args = split(g:bgct_bg_color_hi_group, '\s\+')
+        let l:exec_hi_str = join(l:bg_hi_group_args[2:], ' ')
+        exec 'hi Normal ' . exec_hi_str
 	endif
+
 endfunc
 
 "快速折叠开关
@@ -484,11 +517,16 @@ autocmd BufEnter * call CallAtBufEnter()
 autocmd TabEnter * call CallAtTabEnter()
 autocmd WinEnter * call CallAtWinEnter()
 
-nnoremap <c-h> <c-w>h
+"[START 基础通用按键MAP]
+"窗口焦点切换
+nnoremap <c-h> <c-w>h 
 nnoremap <c-j> <c-w>j
 nnoremap <c-k> <c-w>k
 nnoremap <c-l> <c-w>l
-
+"跳转行首尾
+nnoremap gh 0
+nnoremap gl $
+"tab标签切换
 nnoremap H gT
 nnoremap L gt
 
@@ -502,3 +540,4 @@ vnoremap <leader>y "+y
 nnoremap <leader>p "+p
 vnoremap <leader>p "+p
 
+"[END 基础通用按键MAP]
