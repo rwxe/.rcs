@@ -11,17 +11,12 @@ if wezterm.config_builder then
     config = wezterm.config_builder()
 end
 
--- This is where you actually apply your config choices
-
-config.color_scheme = 'Monokai Remastered' -- 主题
-config.window_background_opacity = 0.85
-config.enable_tab_bar = true
 config.font_size=12.0 -- 字体大小
 config.font = wezterm.font_with_fallback({ "Fira Code Retina", "Noto Sans CJK SC", }) -- 字体选择
-config.use_ime = true
+config.use_ime = true -- 启用输入法
 
 
-
+-- 按键绑定
 config.keys = {
     {
         -- F11 全屏
@@ -31,12 +26,12 @@ config.keys = {
     },
     {
         -- 垂直分割屏幕，在下面生成新窗口
-        key = '_', mods = 'ALT|SHIFT|WIN',
+        key = '-', mods = 'CTRL|ALT|WIN',
         action = act.SplitVertical { domain = 'CurrentPaneDomain' },
     },
     {
         -- 水平分割屏幕，在右边生成新窗口
-        key = '+', mods = 'ALT|SHIFT|WIN',
+        key = '=', mods = 'CTRL|ALT|WIN',
         action = act.SplitHorizontal { domain = "CurrentPaneDomain" },
     },
     {
@@ -113,6 +108,7 @@ for i = 1, 8 do -- ALT+数字 切换Tab
     })
 end
 
+-- 鼠标绑定
 config.mouse_bindings = {
     {
         -- 更改默认点击行为，使其仅选择文本并且不要打开超链接
@@ -127,10 +123,50 @@ config.mouse_bindings = {
         mods = 'CTRL',
         action = act.OpenLinkAtMouseCursor,
     },
-    -- NOTE that binding only the 'Up' event can give unexpected behaviors.
-    -- Read more below on the gotcha of binding an 'Up' event only.
 }
 
+-- 色彩设定
+config.color_scheme = 'iTerm2 Default' -- 主题
+config.default_cursor_style = "BlinkingBlock"
+config.cursor_blink_rate = 600 -- 光标闪烁间隔ms
+config.cursor_blink_ease_in = 'Constant' -- 光标闪烁无缓动
+config.cursor_blink_ease_out = 'Constant'
+config.window_background_opacity = 0.85 -- 透明度
+config.enable_tab_bar = true -- 启用Tab栏
+config.enable_scroll_bar = true -- 启用滚动条
+config.inactive_pane_hsb = { 
+    saturation = 0.8, 
+    brightness = 0.7, } 
+config.colors = {
+    foreground = 'white', -- 默认前景色
+    background = 'black', -- 默认背景色
+    cursor_bg = '#10B9C4', -- 光标背景色
+    cursor_fg = 'black', -- 光标文字前景色
+    cursor_border = '#f37021', -- 非活动窗口的光标边框颜色
+    selection_fg = 'black', -- 选择文字前景色
+    selection_bg = '#fffacd', -- 选择文字背景色
+    scrollbar_thumb = '#222222', -- 滚动栏色
+    split = '#81d8d0', -- 分割线色
+    compose_cursor = 'orange', -- 输入法启用时的光标颜色
+    -- Colors for copy_mode and quick_select
+    -- available since: 20220807-113146-c2fee766
+    -- In copy_mode, the color of the active text is:
+    -- 1. copy_mode_active_highlight_* if additional text was selected using the mouse
+    -- 2. selection_* otherwise
+    copy_mode_active_highlight_bg = { Color = '#000000' },
+    -- use `AnsiColor` to specify one of the ansi color palette values
+    -- (index 0-15) using one of the names "Black", "Maroon", "Green",
+    --  "Olive", "Navy", "Purple", "Teal", "Silver", "Grey", "Red", "Lime",
+    -- "Yellow", "Blue", "Fuchsia", "Aqua" or "White".
+    copy_mode_active_highlight_fg = { AnsiColor = 'Black' },
+    copy_mode_inactive_highlight_bg = { Color = '#52ad70' },
+    copy_mode_inactive_highlight_fg = { AnsiColor = 'White' },
+
+    quick_select_label_bg = { Color = 'peru' },
+    quick_select_label_fg = { Color = '#ffffff' },
+    quick_select_match_bg = { AnsiColor = 'Navy' },
+    quick_select_match_fg = { Color = '#ffffff' },
+}
 
 return config
 
