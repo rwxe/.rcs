@@ -12,7 +12,13 @@ if wezterm.config_builder then
 end
 
 config.font_size=12.0 -- 字体大小
-config.font = wezterm.font_with_fallback({ "Fira Code Retina", "Noto Sans CJK SC", }) -- 字体选择
+config.font = wezterm.font_with_fallback({ 
+    "Fira Code Retina", 
+--    "Liberation Mono",
+--    "Victor Mono",
+    "Noto Sans CJK SC", 
+    "Triplicate A Code",
+}) -- 字体选择
 config.use_ime = true -- 启用输入法
 
 
@@ -129,15 +135,37 @@ config.mouse_bindings = {
 config.color_scheme = 'iTerm2 Default' -- 主题
 config.default_cursor_style = "BlinkingBlock"
 config.cursor_blink_rate = 600 -- 光标闪烁间隔ms
-config.cursor_blink_ease_in = 'Constant' -- 光标闪烁无缓动
+config.cursor_blink_ease_in = 'Constant' -- 光标闪烁无缓动 Constant, Linear
 config.cursor_blink_ease_out = 'Constant'
 config.window_background_opacity = 0.85 -- 透明度
 config.enable_tab_bar = true -- 启用Tab栏
+-- config.use_fancy_tab_bar = false -- 复古Tab栏
 config.enable_scroll_bar = true -- 启用滚动条
-config.inactive_pane_hsb = { 
+config.inactive_pane_hsb = {  -- 非活动窗口亮度和对比度
     saturation = 0.8, 
     brightness = 0.7, } 
+config.window_padding = { -- 边框距离
+  left = 0,
+  right = 0,
+  top = 0,
+  bottom = 0,
+}
+config.window_frame = {
+  font = wezterm.font { family = 'Triplicate A Code', weight = 'Bold' },
+  font_size = 11.0,
+}
 config.colors = {
+    tab_bar = {
+        active_tab = {
+            bg_color = '#81d8d0',
+            fg_color = 'Black',
+        },
+        inactive_tab = {
+            bg_color = '#333333',
+            fg_color = 'Silver',
+        },
+
+    },
     foreground = 'white', -- 默认前景色
     background = 'black', -- 默认背景色
     cursor_bg = '#10B9C4', -- 光标背景色
