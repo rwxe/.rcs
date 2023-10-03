@@ -13,11 +13,10 @@ end
 
 config.font_size=12.0 -- 字体大小
 config.font = wezterm.font_with_fallback({ 
-    "Fira Code Retina", 
---    "Liberation Mono",
+    "Fira Code", 
 --    "Victor Mono",
+--    "Triplicate A Code",
     "Noto Sans CJK SC", 
-    "Triplicate A Code",
 }) -- 字体选择
 config.use_ime = true -- 启用输入法
 
@@ -151,14 +150,17 @@ config.window_padding = { -- 边框距离
   bottom = 0,
 }
 config.window_frame = {
-  font = wezterm.font { family = 'Triplicate A Code', weight = 'Bold' },
-  font_size = 11.0,
+    font = wezterm.font { family = 'Triplicate A Code', weight = 'Bold' },
+    --font = wezterm.font { family = 'Valkyrie A Caps', weight = 'Bold', },
+    font_size = 12.0,
 }
 config.colors = {
     tab_bar = {
         active_tab = {
-            bg_color = '#81d8d0',
-            fg_color = 'Black',
+            --bg_color = '#2e5c6e',
+            --fg_color = 'White',
+            bg_color = 'Black',
+            fg_color = '#81d8d0',
         },
         inactive_tab = {
             bg_color = '#333333',
