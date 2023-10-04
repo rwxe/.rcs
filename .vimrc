@@ -5,6 +5,35 @@
 "  silent execute '!curl --insecure -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 "  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 "endif
+
+"[START vim-plug 导入]
+" 先导入插件可避免设置被覆盖
+"vim-plug list 插件列表
+"set nocompatible			  " 去除VI一致性,必须要添加
+"filetype off				  " 为了vim-plug，如果不使用vim-plug就要去掉
+call plug#begin('~/.vim/plugged')
+Plug 'yianwillis/vimcdoc' "中文文档
+Plug 'arzg/vim-colors-xcode' "Xcode主题
+Plug 'rwxe/termguiattrhook' "用gui属性覆盖cterm属性
+Plug 'google/vim-searchindex' "显示搜索匹配
+"Plug 'gko/vim-coloresque', {'for':'vim'} "显示颜色数值
+"Plug 'nokobear/vim-colorscheme-edit' "简易主题编辑器
+Plug 'guns/xterm-color-table.vim' "xterm颜色查看
+Plug 'tomasr/molokai',{'do':'mkdir -p ../../colors;mv colors/molokai.vim ../../colors/'} "molokai主题
+Plug 'luochen1990/rainbow' "彩虹括号增强
+Plug 'jiangmiao/auto-pairs' "自动括号
+Plug 'tell-k/vim-autopep8',{'for':'python'} "Python PEP8 格式化
+"Plug 'ycm-core/YouCompleteMe' "YCM补全
+Plug 'neoclide/coc.nvim', {'branch': 'release'} "coc.nvim补全
+Plug 'preservim/tagbar' "代码结构显示
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' } "go代码辅助提示
+Plug 'tpope/vim-fugitive' "Git插件
+Plug 'airblade/vim-gitgutter' "Git侧边栏插件
+Plug 'preservim/nerdtree' "文件管理器
+Plug 'Xuyuanp/nerdtree-git-plugin' "文件管理器Git状态显示
+call plug#end()
+"[END vim-plug 导入]
+
 "[START 常规设置]
 set nu "行号
 syntax enable "语法高亮
@@ -31,8 +60,9 @@ set t_Co=256 "启用256色
 set laststatus=2 "2为一直启用状态栏
 set wildmenu "底线命令模式补全栏
 set statusline = "手写状态栏
-set statusline+=%1*%t%*  "文件名
-set statusline+=\ %<%F "文件绝对路径
+set statusline+=%#StatuslineFileName#%t%*  "文件名
+"set statusline+=\ %<%F "文件绝对路径，用户目录下用~开头
+set statusline+=\%<%{'\|'.expand('%:~:h').'\|'} "文件绝对路径，用户目录下用~开头
 set statusline+=\ %{''.(&fenc==&enc?&enc:('['.&fenc.','.&enc.']'))} "fenc和enc相同就显示enc,不同就显示[fenc,enc]
 set statusline+=\ %{(&bomb?'BOM':\"\")}			   "有无BOM
 set statusline+=\ %{&ff}							  "文件系统(dos/unix..)
@@ -48,12 +78,13 @@ set scrolloff=10 "上下边界偏移10行
 set cursorline "高亮当前行
 set cursorcolumn "高亮当前列
 set showcmd "显示命令
-set showmatch 
-set updatetime=1000
+set shortmess-=S "显示搜索匹配数
+set updatetime=4000
 let mapleader=";" "leader键
 "if &filetype != 'c' "防止将0开头的数字识别为八进制
 "	set nrformats-=octal
 "endif
+"
 
 "[END 常规设置]
 
@@ -62,30 +93,40 @@ let mapleader=";" "leader键
 "显示空格和tab
 set list
 set listchars=space:·,tab::::
-set background=dark "背景色调，会影响其他插件的颜色显示
-colorscheme molokai
+
+"set background=dark "手动设置背景色调，会影响其他插件的颜色显示
 "let g:molokai_original = 1
-"colorscheme xcodelighthc
+colorscheme molokai
+"colorscheme eclipse
 func CustomHighlight()
     "自定义附加颜色设置
     "自定义颜色组1 状态栏文件名 bg:omeshionando
-    hi User1 ctermfg=15  ctermbg=23 cterm=bold,italic guibg=#2e5c6e
+    hi StatuslineFileName ctermfg=15  ctermbg=23 cterm=bold,italic guifg=White guibg=#2e5c6e
     "gui fg:kachi bg:ikkonzome
-    hi statusline term=bold,underline cterm=underline ctermfg=Black ctermbg=White gui=underline guibg=#f4a7b9 guifg=#08192d
-    hi statuslineNC term=None cterm=None ctermfg=White ctermbg=Black
+    hi StatusLine term=bold,underline cterm=None ctermfg=Black ctermbg=White gui=None guibg=#f4a7b9 guifg=Black
+    hi StatusLineNC term=None cterm=None ctermfg=DarkGrey ctermbg=Black guifg=DarkGrey guibg=Black
     "hi Normal ctermbg=None guibg=NONE
     hi TabLineSel ctermfg=15  ctermbg=23 cterm=bold
     "hi Comment guifg=#91989f
     hi Visual ctermfg=DarkGrey ctermbg=White guibg=#403d3d
     "hi String ctermfg=227
-    hi Todo ctermfg=Black ctermbg=Yellow guifg=Black guibg=Yellow
-    hi SpecialKey guifg=#303030
+    hi Todo cterm=standout gui=standout
+    hi CursorLineNr guifg=#81d8d0
+    if &background=="light"
+        hi SpecialKey ctermfg=254 guifg=#e4e4e4
+    else
+        hi SpecialKey ctermfg=236 guifg=#303030
+    endif
 
 endfunc
 call CustomHighlight()
 
-"启用真色彩
+"启用真色彩 true colors
 if exists('+termguicolors')
+    let &t_Ts = "\e[9m"   " Strikethrough
+    let &t_Te = "\e[29m"
+    let &t_Cs = "\e[4:3m" " Undercurl
+    let &t_Ce = "\e[4:0m"
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
     set termguicolors
@@ -101,27 +142,7 @@ if system('uname -r') =~ "Microsoft"
 endif
 
 
-set nocompatible			  " 去除VI一致性,必须要添加
-
-"vim-plug list 插件列表
-filetype off				  " 为了vim-plug，如果不使用vim-plug就要去掉
-call plug#begin('~/.vim/plugged')
-"Plug 'rwxe/vimbackgroundcolortoggle'
-Plug 'guns/xterm-color-table.vim'
-Plug 'tomasr/molokai',{'do':'mkdir -p ../../colors;mv colors/molokai.vim ../../colors/'}
-Plug 'luochen1990/rainbow'
-Plug 'jiangmiao/auto-pairs'
-Plug 'tell-k/vim-autopep8',{'for':'python'}
-"Plug 'ycm-core/YouCompleteMe' "YCM补全
-"Plug 'neoclide/coc.nvim', {'tag': 'v0.0.80'} 
-Plug 'neoclide/coc.nvim', {'branch': 'release'} "需要高版本node.js
-Plug 'preservim/tagbar'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-Plug 'tpope/vim-fugitive'
-Plug 'airblade/vim-gitgutter'
-Plug 'preservim/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-call plug#end()
+"
 "[START 插件设置 plug setting ]
 "
 "[START 彩虹括号]
@@ -183,19 +204,26 @@ command GDV Gvdiffsplit "git diff，暂存区和工作区的差异
 "[END vim-fugitive设置]
 "
 "[START vim-gitgutter设置]
-nmap <C-A-S-Down>  <Plug>(GitGutterNextHunk) "下一个修改处 IDEA like
-nmap <C-A-S-Up>  <Plug>(GitGutterPrevHunk) "上一个修改处 IDEA like
-nmap <leader>hs <Plug>(GitGutterStageHunk)  "暂存修改处
-nmap <leader>hu <Plug>(GitGutterUndoHunk)   "取消修改处
-nmap <leader>hp <Plug>(GitGutterPreviewHunk)"预览修改处
+""上下一个修改处 IDEA like
+nmap <C-A-S-Down>  <Plug>(GitGutterNextHunk) 
+nmap <C-A-S-Up>  <Plug>(GitGutterPrevHunk)
+"暂存修改处
+nmap <leader>hs <Plug>(GitGutterStageHunk)
+"取消修改处
+nmap <leader>hu <Plug>(GitGutterUndoHunk)   
+"预览修改处
+nmap <leader>hp <Plug>(GitGutterPreviewHunk)
 command! GQF GitGutterQuickFix | copen "显示所有修改处到copen列表
 "[END vim-gitgutter设置]
 "
 "[START coc.nvim设置]
 "let g:coc_disable_startup_warning = 1
 "跳转警告和错误
-nmap <leader>ep     <Plug>(coc-diagnostic-prev)
-nmap <leader>en   <Plug>(coc-diagnostic-next)
+"Visual Studio Like
+nmap <F8>     <Plug>(coc-diagnostic-next)
+nmap <S-F8>   <Plug>(coc-diagnostic-prev)
+nmap <silent> { <Plug>(coc-diagnostic-prev)
+nmap <silent> } <Plug>(coc-diagnostic-next)
 "按下tab后可补全第一项并关闭弹出菜单
 "旧版coc可用
 inoremap <expr> <Tab> pumvisible() ? coc#_select_confirm() : "<Tab>"
@@ -216,7 +244,8 @@ nmap <silent> gr <Plug>(coc-references)
 "[END coc.nvim设置]
 
 "[START tagbar设置]
-nnoremap <F8> :TagbarToggle<CR>
+"IDEA like
+nnoremap <C-F12> :TagbarToggle<CR> 
 let g:tagbar_ctags_bin='/usr/bin/ctags' "tagbar需要需要知道ctags路径
 "[END tagbar设置]
 "
@@ -258,15 +287,25 @@ let g:ycm_filetype_whitelist = {
 "[END YCM 设置]
 "
 "[START vim-go 设置]
+"Go Fmt Disable
+command GFD let g:go_fmt_autosave=0 | let g:go_imports_autosave=0
 let g:godef_split=3 """打开新窗口的时候左右split
 let g:godef_same_file_in_same_window=1 """函数在同一个文件中时不需要打开新窗口
 "let g:go_def_mapping_enabled=0 "禁用vim-go的gd映射，改用自定义映射
-"let g:go_fmt_autosave=0 "禁用vim-go自动格式化
 "[END vim-go 设置]
+"[START vim-colors-xcode 设置]
+let g:xcodelighthc_green_comments =1
+let g:xcodedarkhc_green_comments = 1
+"[END vim-colors-xcode 设置]
+"Go Fmt Disable
 
 "[END 插件设置 plug setting ]
 
 
+command SOURVIMRC :source %
+command TAB4 set expandtab tabstop=4 softtabstop=4 shiftwidth=4
+command TAB8 set expandtab tabstop=8 softtabstop=8 shiftwidth=8
+command DarkLightToggle call DarkLightToggle() "明暗开关
 command BC call BackgroundColorToggle() "背景色开关
 command WrapToggle call WrapToggle() "快速折叠开关
 command SSGB call ShowSyntaxGroupBelongs() "显示当前字符的语法高亮组
@@ -281,7 +320,22 @@ command WA wa
 command Q q
 command Qa qa
 command QA qa
+command Noh noh
+command NOh noh
+command NOH noh
 
+"明暗开关
+func DarkLightToggle()
+    if &background=="dark"
+        "colorscheme eclipse
+        colorscheme xcodelighthc
+    else
+        colorscheme molokai
+    endif
+    call CustomHighlight()
+    exec 'RainbowToggleOff'
+    exec 'RainbowToggleOn'
+endfunc
 "背景色开关
 func BackgroundColorToggle()
     let l:bg_hi_group = execute('hi Normal')
@@ -347,7 +401,7 @@ func CompileAndRun()
     elseif &filetype == 'java'
         exec "!javac -encoding utf-8 -d . % &&	java %<"
     elseif &filetype == 'sh'
-        exec "!./%"
+        exec "!bash %"
     elseif &filetype == 'python'
         exec "! python %"
     elseif &filetype == 'html'
@@ -356,10 +410,8 @@ func CompileAndRun()
         exec "!go run %"
     elseif &filetype == 'rust'
         exec "!rustc % &&  ./%<"
-    elseif &filetype == 'mkd'
-        exec "!~/.vim/markdown.pl % > %.html & && firefox %.html &"
     elseif &filetype == 'markdown'
-        exec '!firefox %'
+        exec "!firefox %"
     endif
 endfunc
 map <F6> :call RunDebugger()<CR>
@@ -448,12 +500,11 @@ func AutoTitle()
         call feedkeys('3Go','t')
     elseif &filetype=='cpp'
         call setline(1,'#include<iostream>')
-        call setline(2,'using namespace std;')
-        call setline(3,'int main()')
-        call setline(4,'{')
-        call setline(5,'	return 0;')
-        call setline(6,'}')
-        call feedkeys('4Go','t')
+        call setline(2,'int main()')
+        call setline(3,'{')
+        call setline(4,'	return 0;')
+        call setline(5,'}')
+        call feedkeys('3Go','t')
     elseif &filetype=='java'
         call setline(1,'public class '.expand('%:t:r'))
         call setline(2,'{')
@@ -516,12 +567,15 @@ func CallAtWinEnter()
     "nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
 endfunc
 
-autocmd Filetype * call CallAtStarted()
-autocmd BufNewFile * call CallAtNew()
-autocmd BufReadPost * call CallAtBufReadPost()
-autocmd BufEnter * call CallAtBufEnter()
-autocmd TabEnter * call CallAtTabEnter()
-autocmd WinEnter * call CallAtWinEnter()
+augroup vimrcautocmd
+    autocmd!
+    autocmd Filetype * call CallAtStarted()
+    autocmd BufNewFile * call CallAtNew()
+    autocmd BufReadPost * call CallAtBufReadPost()
+    autocmd BufEnter * call CallAtBufEnter()
+    autocmd TabEnter * call CallAtTabEnter()
+    autocmd WinEnter * call CallAtWinEnter()
+augroup END
 
 "[START 基础通用按键MAP]
 "窗口焦点切换
@@ -529,9 +583,16 @@ nnoremap <c-h> <c-w>h
 nnoremap <c-j> <c-w>j
 nnoremap <c-k> <c-w>k
 nnoremap <c-l> <c-w>l
+"窗口大小调整
+command WVRIncr vertical resize+10
+command WVRDecr vertical resize-10
+command WHRIncr resize+10
+command WHRDecr resize-10
 "跳转行首尾 helix like
 nnoremap gh 0
 nnoremap gl $
+xnoremap gh 0
+xnoremap gl $
 "tab标签切换
 nnoremap H gT
 nnoremap L gt
