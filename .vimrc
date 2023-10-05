@@ -45,7 +45,7 @@ filetype plugin indent on
 set smartindent "智能缩进
 set history=1500 "历史1500行
 set tabstop=4 "tab 4格
-set expandtab "tab统一为空格
+"set expandtab "tab统一为空格
 set softtabstop=4 "tab 4格
 set shiftwidth=4 "左右移距离
 set hlsearch "高亮搜索
@@ -62,7 +62,7 @@ set wildmenu "底线命令模式补全栏
 set statusline = "手写状态栏
 set statusline+=%#StatuslineFileName#%t%*  "文件名
 "set statusline+=\ %<%F "文件绝对路径，用户目录下用~开头
-set statusline+=\%<%{'\|'.expand('%:~:h').'\|'} "文件绝对路径，用户目录下用~开头
+set statusline+=\%<%{'\|'.expand('%:p:~:h').'\|'} "文件绝对路径，用户目录下用~开头
 set statusline+=\ %{''.(&fenc==&enc?&enc:('['.&fenc.','.&enc.']'))} "fenc和enc相同就显示enc,不同就显示[fenc,enc]
 set statusline+=\ %{(&bomb?'BOM':\"\")}			   "有无BOM
 set statusline+=\ %{&ff}							  "文件系统(dos/unix..)
@@ -92,7 +92,7 @@ let mapleader=";" "leader键
 "[START 自定义色彩主题]
 "显示空格和tab
 set list
-set listchars=space:·,tab::::
+set listchars=space:·,tab:\ \ \|
 
 "set background=dark "手动设置背景色调，会影响其他插件的颜色显示
 "let g:molokai_original = 1
@@ -113,9 +113,9 @@ func CustomHighlight()
     hi Todo cterm=standout gui=standout
     hi CursorLineNr guifg=#81d8d0
     if &background=="light"
-        hi SpecialKey ctermfg=254 guifg=#e4e4e4
+        hi SpecialKey cterm=None ctermfg=254 gui=None guifg=#e4e4e4 
     else
-        hi SpecialKey ctermfg=236 guifg=#303030
+        hi SpecialKey cterm=None ctermfg=236 gui=None guifg=#303030
     endif
 
 endfunc
@@ -303,8 +303,8 @@ let g:xcodedarkhc_green_comments = 1
 
 
 command SOURVIMRC :source %
-command TAB4 set expandtab tabstop=4 softtabstop=4 shiftwidth=4
-command TAB8 set expandtab tabstop=8 softtabstop=8 shiftwidth=8
+command TAB4 set tabstop=4 softtabstop=4 shiftwidth=4
+command TAB8 set tabstop=8 softtabstop=8 shiftwidth=8
 command DarkLightToggle call DarkLightToggle() "明暗开关
 command BC call BackgroundColorToggle() "背景色开关
 command WrapToggle call WrapToggle() "快速折叠开关
