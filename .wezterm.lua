@@ -11,7 +11,7 @@ if wezterm.config_builder then
     config = wezterm.config_builder()
 end
 
-config.font_size = 12.0 -- 字体大小
+config.font_size = 13.0 -- 字体大小
 config.font = wezterm.font_with_fallback({
     "Fira Code",
     -- "Victor Mono",
