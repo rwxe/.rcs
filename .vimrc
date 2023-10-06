@@ -20,6 +20,7 @@ Plug 'google/vim-searchindex' "显示搜索匹配
 "Plug 'nokobear/vim-colorscheme-edit' "简易主题编辑器
 Plug 'guns/xterm-color-table.vim' "xterm颜色查看
 Plug 'tomasr/molokai',{'do':'mkdir -p ../../colors;mv colors/molokai.vim ../../colors/'} "molokai主题
+Plug 'vim-scripts/MultipleSearch' "多重搜索
 Plug 'luochen1990/rainbow' "彩虹括号增强
 Plug 'jiangmiao/auto-pairs' "自动括号
 Plug 'tell-k/vim-autopep8',{'for':'python'} "Python PEP8 格式化
@@ -35,6 +36,7 @@ call plug#end()
 "[END vim-plug 导入]
 
 "[START 常规设置]
+let mapleader=" " "leader键
 set nu "行号
 syntax enable "语法高亮
 set ruler "尺子，显示行列号
@@ -80,7 +82,6 @@ set cursorcolumn "高亮当前列
 set showcmd "显示命令
 set shortmess-=S "显示搜索匹配数
 set updatetime=4000
-let mapleader=";" "leader键
 "if &filetype != 'c' "防止将0开头的数字识别为八进制
 "	set nrformats-=octal
 "endif
@@ -123,9 +124,9 @@ call CustomHighlight()
 
 "启用真色彩 true colors
 if exists('+termguicolors')
-    let &t_Ts = "\e[9m"   " Strikethrough
+    let &t_Ts = "\e[9m"   " Strikethrough 删除线
     let &t_Te = "\e[29m"
-    let &t_Cs = "\e[4:3m" " Undercurl
+    let &t_Cs = "\e[4:3m" " Undercurl 下波浪线
     let &t_Ce = "\e[4:0m"
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
@@ -144,6 +145,11 @@ endif
 
 "
 "[START 插件设置 plug setting ]
+"
+"[START MultipleSearch设置]
+let g:MultipleSearchColorSequence = "LightYellow, LightRed, LightMagenta, LightGreen, LightCyan, Cyan, DarkYellow, DarkBlue"
+let g:MultipleSearchTextColorSequence = "Black, Black, Black, Black, Black, Black, White, White"
+"[END MultipleSearch设置]
 "
 "[START 彩虹括号]
 let g:rainbow_active = 1 "启用
