@@ -25,6 +25,12 @@ config.use_ime = true -- 启用输入法
 
 -- 按键绑定
 config.keys = {
+	{
+        -- 禁用ALT+Enter全屏
+        key = 'Enter', mods = 'ALT',
+        action = act.DisableDefaultAssignment,
+
+	},
     {
         -- F11 全屏
         key = 'F11', mods = '',
