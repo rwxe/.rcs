@@ -73,18 +73,21 @@ plugins=(git extract z zsh-autosuggestions zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
-bindkey '\eH' backward-char	#左移字母
-bindkey '\eL' forward-char	#右移字母
-bindkey '\eJ' down-line-or-history	#下一个历史
-bindkey '\eK' up-line-or-history	#上一个历史
-bindkey '\eh' backward-word		#左移词语
-bindkey '\el' forward-word	#右移词语
-bindkey '\ej' beginning-of-line	#首字母
-bindkey '\ek' end-of-line	#尾字母
+#\e 就是Alt
+bindkey '\eH' backward-char			#左移字母
+bindkey '\eL' forward-char			#右移字母
+bindkey '\eJ' down-line-or-history	#下一个历史，原生Ctrl+n
+bindkey '\eK' up-line-or-history	#上一个历史，原生Ctrl+p
+bindkey '\eh' backward-word			#左移词语
+bindkey '\el' forward-word			#右移词语
+bindkey '\ej' beginning-of-line		#行首
+bindkey '\ek' end-of-line			#行尾
 
-bindkey -s '\eb' '^Ucd ..\n'	#返回上一级
-bindkey -s '\ei' '^Ucd ~\n'		#返回主页
+bindkey -s '\eo' '^E^Ucd ..\n'		#返回上一级
+bindkey -s '\ei' '^E^Ucd ~\n'		#返回主页
 
+bindkey \^U backward-kill-line # 删除光标之前的文字
+# bindkey \^U kill-whole-line # 删除一整行
 # 模糊搜索历史
 bindkey '^r' history-incremental-pattern-search-backward
 setopt extended_glob
@@ -104,18 +107,23 @@ alias rm="trash-put"
 alias pw="powershell.exe "
 alias pwii="powershell.exe ii ." # 在当前路径打开文件管理器
 # User configuration
-# 替换提示符中的>
-PROMPT=${PROMPT/>/🌀}
 
 #golang env
 export PATH=$PATH:/usr/local/go/bin
 export GOROOT=/usr/local/go
 export GOPATH=/media/WH/REPO/GO
 export GOBIN=$GOPATH/bin
-export GOPROXY=https://goproxy.io,direct
+export GOPROXY=https://proxy.golang.com.cn,direct
 export GO111MODULE=auto
 export PATH=$PATH:$GOPATH/bin
 
+#rust env
+. "$HOME/.cargo/env"
+
+#ime
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS=@im=fcitx
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
