@@ -5,26 +5,25 @@
 "  silent execute '!curl --insecure -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 "  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 "endif
-
 "[START vim-plug 导入]
 " 先导入插件可避免设置被覆盖
 "vim-plug list 插件列表
 "set nocompatible			  " 去除VI一致性,必须要添加
 "filetype off				  " 为了vim-plug，如果不使用vim-plug就要去掉
 call plug#begin('~/.vim/plugged')
+"Plug 'nokobear/vim-colorscheme-edit' "简易主题编辑器
+"Plug 'ycm-core/YouCompleteMe' "YCM补全
+"Plug 'gko/vim-coloresque', {'for':'css, html, vim'} "显示颜色数值的颜色
+Plug 'jiangmiao/auto-pairs'
 Plug 'yianwillis/vimcdoc' "中文文档
 Plug 'arzg/vim-colors-xcode' "Xcode主题
 Plug 'rwxe/termguiattrhook' "用gui属性覆盖cterm属性
 Plug 'google/vim-searchindex' "显示搜索匹配
-"Plug 'gko/vim-coloresque', {'for':'vim'} "显示颜色数值
-"Plug 'nokobear/vim-colorscheme-edit' "简易主题编辑器
 Plug 'guns/xterm-color-table.vim' "xterm颜色查看
 Plug 'tomasr/molokai',{'do':'mkdir -p ../../colors;mv colors/molokai.vim ../../colors/'} "molokai主题
 Plug 'vim-scripts/MultipleSearch' "多重搜索
 Plug 'luochen1990/rainbow' "彩虹括号增强
-Plug 'jiangmiao/auto-pairs' "自动括号
 Plug 'tell-k/vim-autopep8',{'for':'python'} "Python PEP8 格式化
-"Plug 'ycm-core/YouCompleteMe' "YCM补全
 Plug 'neoclide/coc.nvim', {'branch': 'release'} "coc.nvim补全
 Plug 'preservim/tagbar' "代码结构显示
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' } "go代码辅助提示
@@ -94,11 +93,10 @@ set updatetime=4000
 "显示空格和tab
 set list
 set listchars=space:·,tab:\ \ \|
-
-"set background=dark "手动设置背景色调，会影响其他插件的颜色显示
-"let g:molokai_original = 1
 colorscheme molokai
 "colorscheme eclipse
+"set background=dark "手动设置背景色调，会影响其他插件的颜色显示
+"let g:molokai_original = 1
 func CustomHighlight()
     "自定义附加颜色设置
     "自定义颜色组1 状态栏文件名 bg:omeshionando
@@ -109,7 +107,7 @@ func CustomHighlight()
     "hi Normal ctermbg=None guibg=NONE
     hi TabLineSel ctermfg=15  ctermbg=23 cterm=bold
     "hi Comment guifg=#91989f
-    hi Visual ctermfg=DarkGrey ctermbg=White guibg=#403d3d
+    hi Visual ctermfg=DarkGrey ctermbg=White guifg=#804020 guibg=#ffc0a0
     "hi String ctermfg=227
     hi Todo cterm=standout gui=standout
     hi CursorLineNr guifg=#81d8d0
@@ -175,18 +173,22 @@ let g:rainbow_conf = {
     \}
 "[END 彩虹括号]
 "
-"[START 关闭auto-pairs的快捷键]
-let g:AutoPairsShortcutFastWrap = ''
-let g:AutoPairsShortcutJump = ''
+"[START auto-pairs的快捷键]
+
+let g:AutoPairsShortcutFastWrap = ""
+let g:AutoPairsShortcutJump = ""
+let g:AutoPairsMapBS = 0
 let g:AutoPairsMapCh = 0
 let g:AutoPairsCenterLine = 0
 let g:AutoPairsMapSpace = 0
+let g:AutoPairsFlyMode = 0
 let g:AutoPairsMultilineClose = 0
-"[END 关闭auto-pairs的快捷键]
 
+"[END auto-pairs的快捷键]
 
 "[START NERDTree设置]
 nnoremap <C-e> :NERDTreeToggle<CR>
+command NT NERDTreeToggle
 let g:NERDTreeGitStatusShowClean = 1 " default: 0
 let g:NERDTreeGitStatusConcealBrackets = 1 " default: 0
 let g:NERDTreeGitStatusIndicatorMapCustom = {
@@ -228,11 +230,12 @@ command! GQF GitGutterQuickFix | copen "显示所有修改处到copen列表
 "Visual Studio Like
 nmap <F8>     <Plug>(coc-diagnostic-next)
 nmap <S-F8>   <Plug>(coc-diagnostic-prev)
-nmap <silent> { <Plug>(coc-diagnostic-prev)
-nmap <silent> } <Plug>(coc-diagnostic-next)
+nmap <leader>[ <Plug>(coc-diagnostic-prev)
+nmap <leader>] <Plug>(coc-diagnostic-next)
 "按下tab后可补全第一项并关闭弹出菜单
 "旧版coc可用
-inoremap <expr> <Tab> pumvisible() ? coc#_select_confirm() : "<Tab>"
+" inoremap <expr> <Tab> pumvisible() ? coc#_select_confirm() : \"<Tab>"
+inoremap <expr> <TAB> pumvisible() ? "\<C-y>" : "\<C-g>u\<TAB>"
 "新版coc可用
 "inoremap <silent><expr> <tab> coc#pum#visible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
 "
@@ -240,7 +243,9 @@ inoremap <expr> <Tab> pumvisible() ? coc#_select_confirm() : "<Tab>"
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 "重命名
-nmap <leader>rn <Plug>(coc-rename)
+nmap <leader>r <Plug>(coc-rename)
+"Visual Studio like
+nmap <F2> <Plug>(coc-rename) 
 
 "coc GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)
@@ -312,6 +317,7 @@ command SOURVIMRC :source %
 command TAB4 set tabstop=4 softtabstop=4 shiftwidth=4
 command TAB8 set tabstop=8 softtabstop=8 shiftwidth=8
 command DarkLightToggle call DarkLightToggle() "明暗开关
+command STiem echo strftime("%Y %b %d %X")
 command BC call BackgroundColorToggle() "背景色开关
 command WrapToggle call WrapToggle() "快速折叠开关
 command SSGB call ShowSyntaxGroupBelongs() "显示当前字符的语法高亮组
@@ -456,26 +462,24 @@ func BracesMatch()
     inoremap "" ""
     inoremap `` ``
 
-    inoremap (<BACKSPACE> (
-    inoremap [<BACKSPACE> [
-    inoremap {<BACKSPACE> {
-    inoremap '<BACKSPACE> '
-    inoremap "<BACKSPACE> "
+    "inoremap (<BACKSPACE> (
+    "inoremap [<BACKSPACE> [
+    "inoremap {<BACKSPACE> {
+    "inoremap '<BACKSPACE> '
+    "inoremap \"<BACKSPACE> "
     
     if &filetype=='vim'
         inoremap " "
     elseif &filetype=='cpp'||&filetype=='c'||&filetype=='java' ||&filetype=='css'
-        inoremap {<CR> {<CR>}<up><end><CR>
+        "inoremap {<CR> {<CR>}<up><end><CR>
     elseif &filetype=='go'
-        inoremap (<CR> (<CR>)<up><end><CR>
-        inoremap {<CR> {<CR>}<up><end><CR>
+        "inoremap (<CR> (<CR>)<up><end><CR>
+        "inoremap {<CR> {<CR>}<up><end><CR>
     elseif &filetype=='markdown'
-        inoremap ``` ``````<left><left><left><CR><up><END>
+        inoremap ``` ``````<left><left><left>
     elseif &filetype=='python'
         inoremap """ """"""<left><left><left>
         inoremap ''' ''''''<left><left><left>
-        inoremap < <
-        inoremap <<BACKSPACE> <<BACKSPACE>
     elseif &filetype=='php' || &filetype=='html' || &filetype=='htmldjango'
         inoremap < <><left>
         inoremap <<BACKSPACE> <
@@ -558,7 +562,7 @@ func CallAtBufReadPost()
 endfunc
 
 func CallAtBufEnter()
-    "call BracesMatch() 手写括号匹配
+    "call BracesMatch() "手写括号匹配
     "对于gd跳转，分裂新窗口
     "nmap <buffer> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
 endfunc
@@ -603,9 +607,6 @@ xnoremap gl $
 nnoremap H gT
 nnoremap L gt
 
-"repeat paste 重复粘贴
-nnoremap <leader>rp "0p
-vnoremap <leader>rp "0p
 "快捷复制粘贴剪贴板
 "For GUI terminal，不完全兼容WSL设置
 nnoremap <leader>y "+y
@@ -614,3 +615,13 @@ nnoremap <leader>p "+p
 vnoremap <leader>p "+p
 
 "[END 基础通用按键MAP]
+" jb
+command! -range -nargs=+ SR call Surround(<f-args>)
+
+func! Surround(sr_opt,begin_pair,end_pair)
+	normal! `<v`>"sx
+	let l:text = a:begin_pair . @s  . a:end_pair
+	call setreg("s",l:text)
+	normal! "sp
+endfunc
+
