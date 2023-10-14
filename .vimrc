@@ -317,7 +317,7 @@ command SOURVIMRC :source %
 command TAB4 set tabstop=4 softtabstop=4 shiftwidth=4
 command TAB8 set tabstop=8 softtabstop=8 shiftwidth=8
 command DarkLightToggle call DarkLightToggle() "明暗开关
-command STiem echo strftime("%Y %b %d %X")
+command ShowTime echo strftime("%Y %b %d %X")
 command BC call BackgroundColorToggle() "背景色开关
 command WrapToggle call WrapToggle() "快速折叠开关
 command SSGB call ShowSyntaxGroupBelongs() "显示当前字符的语法高亮组
@@ -615,13 +615,4 @@ nnoremap <leader>p "+p
 vnoremap <leader>p "+p
 
 "[END 基础通用按键MAP]
-" jb
-command! -range -nargs=+ SR call Surround(<f-args>)
-
-func! Surround(sr_opt,begin_pair,end_pair)
-	normal! `<v`>"sx
-	let l:text = a:begin_pair . @s  . a:end_pair
-	call setreg("s",l:text)
-	normal! "sp
-endfunc
 
